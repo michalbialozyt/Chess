@@ -1,0 +1,3 @@
+C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/cmake-build-debug/CMakeFiles/chess_game__debug.dir
+C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/cmake-build-debug/CMakeFiles/rebuild_cache.dir
