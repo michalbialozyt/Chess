@@ -56,6 +56,13 @@ build CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj: CXX_COMPILER__chess_g
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir
   OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
 
+build CMakeFiles/chess_game__debug.dir/src/game_state.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/game_state.cpp || cmake_object_order_depends_target_chess_game__debug
+  DEP_FILE = CMakeFiles\chess_game__debug.dir\src\game_state.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include
+  OBJECT_DIR = CMakeFiles\chess_game__debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
+
 build CMakeFiles/chess_game__debug.dir/main.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/main.cpp || cmake_object_order_depends_target_chess_game__debug
   DEP_FILE = CMakeFiles\chess_game__debug.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
@@ -71,7 +78,7 @@ build CMakeFiles/chess_game__debug.dir/main.cpp.obj: CXX_COMPILER__chess_game__d
 #############################################
 # Link the executable chess_game__debug.exe
 
-build chess_game__debug.exe: CXX_EXECUTABLE_LINKER__chess_game__debug_Debug CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj CMakeFiles/chess_game__debug.dir/main.cpp.obj
+build chess_game__debug.exe: CXX_EXECUTABLE_LINKER__chess_game__debug_Debug CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj CMakeFiles/chess_game__debug.dir/src/game_state.cpp.obj CMakeFiles/chess_game__debug.dir/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir

@@ -31,7 +31,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 9,
+				"line" : 10,
 				"parent" : 0
 			},
 			{
@@ -113,7 +113,8 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
+				1,
+				2
 			]
 		}
 	],
@@ -151,7 +152,8 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
+				1,
+				2
 			]
 		}
 	],
@@ -161,6 +163,12 @@
 			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "src/pieces.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "src/game_state.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
