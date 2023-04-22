@@ -7,11 +7,18 @@
 #include <vector>
 #include "game_state.hpp"
 
-class Position {
-public:
+struct Position {
     Position(int x, int y) : X_Coordinate(x), Y_Coordinate(y){}
     int X_Coordinate;
     int Y_Coordinate;
+    bool operator==(const Position& other) const {
+        if (this->X_Coordinate == other.X_Coordinate && this->Y_Coordinate == other.Y_Coordinate) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 };
 
 enum class Team {
@@ -19,9 +26,10 @@ enum class Team {
 };
 
 class Piece{
-public:
+protected:
     Position position_;
     Team team_;
+public:
     Piece(const Position& start_position, const Team& team) : position_(start_position), team_(team){}
     Piece(const Piece& other) = default;
     Position get_position () const {return position_;}
@@ -65,5 +73,8 @@ public:
     std::vector<Position> calculate_possible_moves(Game_State& current_game_state) const override;
     ~Rook() = default;
 };
+
+void add_vertical_and_horizontal_moves(std::vector<Position>& vec, Position position, Game_State& current_game_state);
+void add_diagonal_moves(std::vector<Position>& vec, Position position, Game_State& current_game_state);
 
 #endif //CHESS_PIECES_HPP

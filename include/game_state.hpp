@@ -12,10 +12,13 @@ enum class move_type{
     NORMAL, CASTLE, EN_PASSANT, PROMOTION
 };
 
-struct Game_State{
-    static std::vector<Piece> pieces_;
-    bool is_in_check();
-    std::pair<Position,bool> is_occupied;
+class Game_State{
+private:
+    std::vector<std::unique_ptr<Piece>> pieces_;
+public:
+    std::vector<Piece*> get_pieces() const;
+    bool is_in_check() const;
+    bool is_occupied(Position& position) const;
 };
 
 #endif //CHESS_GAME_GAME_STATE_HPP
