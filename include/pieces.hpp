@@ -1,5 +1,5 @@
 //
-// Created by bialo on 19.04.2023.
+// Created by michal bialozyt on 19.04.2023.
 //
 
 #ifndef CHESS_PIECES_HPP
@@ -8,7 +8,7 @@
 #include "game_state.hpp"
 
 struct Position {
-    Position(int x, int y) : X_Coordinate(x), Y_Coordinate(y){}
+    explicit Position(int x = 0, int y = 0) : X_Coordinate(x), Y_Coordinate(y){}
     int X_Coordinate;
     int Y_Coordinate;
     bool operator==(const Position& other) const {
@@ -37,6 +37,13 @@ public:
     virtual std::vector<Position> calculate_possible_moves(Game_State& current_game_state) const = 0;
     void set_position(Position new_position) {position_ = new_position;};
     ~Piece() = default;
+};
+
+class Pawn: public Piece {
+public:
+    Pawn(const Position& start_position, const Team& team) : Piece(start_position, team){}
+    std::vector<Position> calculate_possible_moves(Game_State& current_game_state) const override;
+    ~Pawn() = default;
 };
 
 class King: public Piece {
@@ -76,5 +83,10 @@ public:
 
 void add_vertical_and_horizontal_moves(std::vector<Position>& vec, Position position, Game_State& current_game_state);
 void add_diagonal_moves(std::vector<Position>& vec, Position position, Game_State& current_game_state);
+
+struct Knight_moves{
+    inline static std::vector<std::pair<int,int>> horsey_moves_{std::make_pair(1,2), std::make_pair(1,-2),std::make_pair(-1,2),std::make_pair(-1,-2),std::make_pair(2,1),std::make_pair(-2,-1),std::make_pair(-2,1),std::make_pair(1,-2),};
+};
+
 
 #endif //CHESS_PIECES_HPP

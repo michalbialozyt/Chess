@@ -1,5 +1,5 @@
 //
-// Created by bialo on 20.04.2023.
+// Created by michal bialozyt on 20.04.2023.
 //
 #include<game_state.hpp>
 std::vector<Piece*> Game_State::get_pieces() const{
@@ -9,11 +9,12 @@ std::vector<Piece*> Game_State::get_pieces() const{
     }
     return pieces_to_return;
 }
+
 bool Game_State::is_occupied(Position& position) const {
     bool is_occupied = false;
     for(const auto& elem : pieces_){
         if(elem->get_position() == position){
-            is_occupied = false;
+            is_occupied = true;
         }
     }
     return is_occupied;
