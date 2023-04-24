@@ -31,7 +31,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 10,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
@@ -46,9 +46,27 @@
 			},
 			{
 				"command" : 2,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
 				"file" : 0,
 				"line" : 10,
 				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 18,
+				"parent" : 0
 			},
 			{
 				"command" : 3,
@@ -88,6 +106,10 @@
 				},
 				{
 					"backtrace" : 4,
+					"fragment" : "-Werror=switch"
+				},
+				{
+					"backtrace" : 5,
 					"fragment" : "-Wconversion"
 				},
 				{
@@ -97,7 +119,15 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
+					"path" : "C:/Users/bialo/SDL/SDL2-2.26.5/include"
+				},
+				{
+					"backtrace" : 7,
+					"path" : "C:/Users/bialo/SDL/SDL2-2.26.5/lib/x86"
+				},
+				{
+					"backtrace" : 8,
 					"path" : "C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include"
 				}
 			],
