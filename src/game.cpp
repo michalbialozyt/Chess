@@ -3,7 +3,8 @@
 //
 #include "game.hpp"
 void Game::run() {
-    Window window("SDL2 Window", WIDTH, HEIGHT);
+    Graphics graphics;
+    Game_State gamestate;
 
     bool quit = false;
     while (!quit) {
@@ -15,8 +16,9 @@ void Game::run() {
             }
         }
 
-        SDL_RenderClear(window.getRenderer());
-
-        SDL_RenderPresent(window.getRenderer());
+        SDL_RenderClear(graphics.renderer_);
+        graphics.Render_chessboard();
+        graphics.Render_all_pieces(gamestate.board_);
+        SDL_RenderPresent(graphics.renderer_);
     }
 }

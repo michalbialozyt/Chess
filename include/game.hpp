@@ -4,8 +4,6 @@
 
 #pragma once
 #include "graphics.hpp"
-#define WIDTH 640
-#define HEIGHT 640
 
 class Game {
 public:

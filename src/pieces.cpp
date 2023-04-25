@@ -196,3 +196,57 @@ std::vector<Position> Queen::calculate_possible_moves(Piece* board[8][8]) const 
     add_diagonal_moves(legal_moves, position_,board);
     return legal_moves;
 }
+
+const char* Pawn::get_image_name() {
+    if(team_ == BLACK){
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_pawn.png";
+    }
+    else{
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_pawn.png";
+    }
+}
+
+const char* King::get_image_name() {
+    if(team_ == BLACK){
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_king.png";
+    }
+    else{
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_king.png";
+    }
+}
+
+const char* Queen::get_image_name() {
+    if(team_ == BLACK){
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_Queen.png";
+    }
+    else{
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_Queen.png";
+    }
+}
+
+const char* Knight::get_image_name() {
+    if(team_ == BLACK){
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_horse.png";
+    }
+    else{
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_horse.png";
+    }
+}
+
+const char* Rook::get_image_name() {
+    if(team_ == BLACK){
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_rook.png";
+    }
+    else{
+        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_rook.png";
+    }
+}
+
+const char* Bishop::get_image_name() {
+    if(team_ == BLACK){
+        return "C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/dark_bishop.png";
+    }
+    else{
+        return "C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/white_bishop.png";
+    }
+}
