@@ -41,14 +41,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CMake_Target::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CMake_Target-Debug-20cb84c2a4df84ab8269.json",
+					"jsonFile" : "target-CMake_Target-Debug-4bfe0dc9ed53f19a00d2.json",
 					"name" : "CMake_Target",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "chess_game__debug::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-chess_game__debug-Debug-11f347ac436bd1bf61a5.json",
+					"jsonFile" : "target-chess_game__debug-Debug-91dadc17a4c7ba5af6d7.json",
 					"name" : "chess_game__debug",
 					"projectIndex" : 0
 				}

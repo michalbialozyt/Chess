@@ -36,7 +36,7 @@ public:
     Position get_position () const {return position_;}
     Team get_team () const {return team_;}
     Piece_type get_piecetype() const {return piecetype_;}
-    virtual std::vector<Position> calculate_possible_moves(Piece*[8][8]) const {return {};}
+    virtual std::vector<Position> calculate_possible_moves(Piece*[8][8]) const = 0;
     void set_position(Position new_position) {position_ = new_position;}
     virtual ~Piece() = default;
 
@@ -50,7 +50,6 @@ class Pawn: public Piece {
 public:
     Pawn(const Position& start_position, Team team) : Piece(start_position, team, PAWN){}
     std::vector<Position> calculate_possible_moves(Piece* board[8][8]) const override;
-    ~Pawn() override = default;
 };
 
 class King: public Piece {

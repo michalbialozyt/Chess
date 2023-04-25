@@ -41,40 +41,6 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target CMake_Target
-
-
-#############################################
-# Order-only phony target for CMake_Target
-
-build cmake_object_order_depends_target_CMake_Target: phony || CMakeFiles/CMake_Target.dir
-
-build CMakeFiles/CMake_Target.dir/main.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/main.cpp || cmake_object_order_depends_target_CMake_Target
-  DEP_FILE = CMakeFiles\CMake_Target.dir\main.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL/SDL2-2.26.5/lib/x86 -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include
-  OBJECT_DIR = CMakeFiles\CMake_Target.dir
-  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target CMake_Target
-
-
-#############################################
-# Link the executable CMake_Target.exe
-
-build CMake_Target.exe: CXX_EXECUTABLE_LINKER__CMake_Target_Debug CMakeFiles/CMake_Target.dir/main.cpp.obj
-  FLAGS = -g
-  LINK_LIBRARIES = -lSDL2main  -lSDL2  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\CMake_Target.dir
-  POST_BUILD = cd .
-  PRE_LINK = cd .
-  TARGET_FILE = CMake_Target.exe
-  TARGET_IMPLIB = libCMake_Target.dll.a
-  TARGET_PDB = CMake_Target.exe.dbg
-
-# =============================================================================
 # Object build statements for EXECUTABLE target chess_game__debug
 
 
@@ -85,22 +51,36 @@ build cmake_object_order_depends_target_chess_game__debug: phony || CMakeFiles/c
 
 build CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/pieces.cpp || cmake_object_order_depends_target_chess_game__debug
   DEP_FILE = CMakeFiles\chess_game__debug.dir\src\pieces.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Werror=switch -Wconversion -std=gnu++17
-  INCLUDES = -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL/SDL2-2.26.5/lib/x86 -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir
   OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
 
 build CMakeFiles/chess_game__debug.dir/src/game_state.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/game_state.cpp || cmake_object_order_depends_target_chess_game__debug
   DEP_FILE = CMakeFiles\chess_game__debug.dir\src\game_state.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Werror=switch -Wconversion -std=gnu++17
-  INCLUDES = -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL/SDL2-2.26.5/lib/x86 -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\chess_game__debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
+
+build CMakeFiles/chess_game__debug.dir/src/window.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/window.cpp || cmake_object_order_depends_target_chess_game__debug
+  DEP_FILE = CMakeFiles\chess_game__debug.dir\src\window.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\chess_game__debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
+
+build CMakeFiles/chess_game__debug.dir/src/game.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/game.cpp || cmake_object_order_depends_target_chess_game__debug
+  DEP_FILE = CMakeFiles\chess_game__debug.dir\src\game.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir
   OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir\src
 
 build CMakeFiles/chess_game__debug.dir/main.cpp.obj: CXX_COMPILER__chess_game__debug_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/main.cpp || cmake_object_order_depends_target_chess_game__debug
   DEP_FILE = CMakeFiles\chess_game__debug.dir\main.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Werror=switch -Wconversion -std=gnu++17
-  INCLUDES = -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL/SDL2-2.26.5/lib/x86 -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir
   OBJECT_FILE_DIR = CMakeFiles\chess_game__debug.dir
 
@@ -112,7 +92,7 @@ build CMakeFiles/chess_game__debug.dir/main.cpp.obj: CXX_COMPILER__chess_game__d
 #############################################
 # Link the executable chess_game__debug.exe
 
-build chess_game__debug.exe: CXX_EXECUTABLE_LINKER__chess_game__debug_Debug CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj CMakeFiles/chess_game__debug.dir/src/game_state.cpp.obj CMakeFiles/chess_game__debug.dir/main.cpp.obj
+build chess_game__debug.exe: CXX_EXECUTABLE_LINKER__chess_game__debug_Debug CMakeFiles/chess_game__debug.dir/src/pieces.cpp.obj CMakeFiles/chess_game__debug.dir/src/game_state.cpp.obj CMakeFiles/chess_game__debug.dir/src/window.cpp.obj CMakeFiles/chess_game__debug.dir/src/game.cpp.obj CMakeFiles/chess_game__debug.dir/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\chess_game__debug.dir
@@ -121,6 +101,69 @@ build chess_game__debug.exe: CXX_EXECUTABLE_LINKER__chess_game__debug_Debug CMak
   TARGET_FILE = chess_game__debug.exe
   TARGET_IMPLIB = libchess_game__debug.dll.a
   TARGET_PDB = chess_game__debug.exe.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target CMake_Target
+
+
+#############################################
+# Order-only phony target for CMake_Target
+
+build cmake_object_order_depends_target_CMake_Target: phony || CMakeFiles/CMake_Target.dir
+
+build CMakeFiles/CMake_Target.dir/main.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/main.cpp || cmake_object_order_depends_target_CMake_Target
+  DEP_FILE = CMakeFiles\CMake_Target.dir\main.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Werror=switch -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir
+
+build CMakeFiles/CMake_Target.dir/src/pieces.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/pieces.cpp || cmake_object_order_depends_target_CMake_Target
+  DEP_FILE = CMakeFiles\CMake_Target.dir\src\pieces.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Werror=switch -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir\src
+
+build CMakeFiles/CMake_Target.dir/src/game_state.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/game_state.cpp || cmake_object_order_depends_target_CMake_Target
+  DEP_FILE = CMakeFiles\CMake_Target.dir\src\game_state.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Werror=switch -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir\src
+
+build CMakeFiles/CMake_Target.dir/src/window.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/window.cpp || cmake_object_order_depends_target_CMake_Target
+  DEP_FILE = CMakeFiles\CMake_Target.dir\src\window.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Werror=switch -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir\src
+
+build CMakeFiles/CMake_Target.dir/src/game.cpp.obj: CXX_COMPILER__CMake_Target_Debug C$:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/src/game.cpp || cmake_object_order_depends_target_CMake_Target
+  DEP_FILE = CMakeFiles\CMake_Target.dir\src\game.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Werror=switch -std=gnu++17
+  INCLUDES = -IC:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/include -IC:/Users/bialo/SDL/SDL2-2.26.5/include -IC:/Users/bialo/SDL_image/SDL2_image-2.6.3/include
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMake_Target.dir\src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target CMake_Target
+
+
+#############################################
+# Link the executable CMake_Target.exe
+
+build CMake_Target.exe: CXX_EXECUTABLE_LINKER__CMake_Target_Debug CMakeFiles/CMake_Target.dir/main.cpp.obj CMakeFiles/CMake_Target.dir/src/pieces.cpp.obj CMakeFiles/CMake_Target.dir/src/game_state.cpp.obj CMakeFiles/CMake_Target.dir/src/window.cpp.obj CMakeFiles/CMake_Target.dir/src/game.cpp.obj
+  FLAGS = -g
+  LINK_LIBRARIES = -lSDL2main  -lSDL2  -lSDL2_image  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/Users/bialo/SDL/SDL2-2.26.5/lib/x64   -LC:/Users/bialo/SDL_image/SDL2_image-2.6.3/lib/x64
+  OBJECT_DIR = CMakeFiles\CMake_Target.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = CMake_Target.exe
+  TARGET_IMPLIB = libCMake_Target.dll.a
+  TARGET_PDB = CMake_Target.exe.dbg
 
 
 #############################################
@@ -160,7 +203,7 @@ build chess_game__debug: phony chess_game__debug.exe
 #############################################
 # Folder: C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/cmake-build-debug
 
-build all: phony CMake_Target.exe chess_game__debug.exe
+build all: phony chess_game__debug.exe CMake_Target.exe
 
 # =============================================================================
 # Built-in targets
