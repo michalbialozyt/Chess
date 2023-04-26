@@ -15,6 +15,8 @@ private:
 public:
     Piece* board_[8][8];
     Game_State();
+    bool is_legal_move(Position position, Piece* piece, Piece* board[8][8]);
+    void make_move(Piece* piece, Position new_position);
     Piece::Team get_top_board_team () const {return top_board_team_;}
     bool is_in_check() const {return false;}
 };

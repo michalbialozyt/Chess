@@ -25,6 +25,8 @@ public:
 
     void Render_chessboard() const;
 
+    void Render_possible_moves(Piece* piece, Piece* board[8][8]) const;
+
     SDL_Window* window_;
 
     SDL_Renderer* renderer_;

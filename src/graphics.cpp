@@ -2,6 +2,7 @@
 // Created by michal bialozyt on 25.04.2023.
 //
 #include "graphics.hpp"
+#include <algorithm>
 
 Graphics::Graphics(){
     SDL_Init(SDL_INIT_VIDEO);
@@ -78,6 +79,21 @@ void Graphics::Render_all_pieces(Piece* board[8][8]) const {
             if(board[i][j] != nullptr){
                 Render_piece(board[i][j]->get_image_name(),board[i][j]->get_position().X_Coordinate * WIDTH/8 + 10, board[i][j]->get_position().Y_Coordinate* HEIGHT/8 + 10);
             }
+        }
+    }
+}
+
+void Graphics::Render_possible_moves(Piece* piece, Piece* board[8][8]) const {
+    if(piece != nullptr) {
+        auto legal_moves = piece->calculate_possible_moves(board);
+        for (const auto &pos: legal_moves) {
+            SDL_Rect cellRect;
+            cellRect.w = WIDTH / 8;
+            cellRect.h = HEIGHT / 64;
+            cellRect.x = pos.X_Coordinate * WIDTH / 8;
+            cellRect.y = pos.Y_Coordinate * HEIGHT / 8 + 70;
+            SDL_SetRenderDrawColor(renderer_, 173, 216, 230, 255);
+            SDL_RenderFillRect(renderer_, &cellRect);
         }
     }
 }

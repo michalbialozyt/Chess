@@ -2,6 +2,7 @@
 // Created by michal bialozyt on 20.04.2023.
 //
 #include "game_state.hpp"
+#include <algorithm>
 
 Game_State::Game_State(){
     top_board_team_ = Piece::BLACK;
@@ -25,7 +26,7 @@ Game_State::Game_State(){
     pieces_.push_back(std::make_unique<Pawn>(Position(1,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(2,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(3,1), Piece::BLACK));
-    pieces_.push_back(std::make_unique<Pawn>(Position(4,1), Piece::BLACK));
+    pieces_.push_back(std::make_unique<Pawn>(Position(4,2), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(5,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(6,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(7,1), Piece::BLACK));
@@ -45,4 +46,15 @@ Game_State::Game_State(){
     for(const auto& elem : pieces_){
         board_[elem->get_position().X_Coordinate][elem->get_position().Y_Coordinate] = elem.get();
     }
+}
+
+void  Game_State::make_move(Piece* piece, Position new_position){
+    board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+    board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
+    piece->set_position(new_position);
+}
+
+bool Game_State::is_legal_move(Position position, Piece* piece, Piece* board[8][8]){
+    auto legal_moves = piece->calculate_possible_moves(board);
+    return std::find(legal_moves.begin(), legal_moves.end(), position) != legal_moves.end();
 }
