@@ -3,6 +3,7 @@
 //
 #include "game_state.hpp"
 #include <algorithm>
+#include <iostream>
 
 Game_State::Game_State(){
     top_board_team_ = Piece::BLACK;
@@ -26,7 +27,7 @@ Game_State::Game_State(){
     pieces_.push_back(std::make_unique<Pawn>(Position(1,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(2,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(3,1), Piece::BLACK));
-    pieces_.push_back(std::make_unique<Pawn>(Position(4,2), Piece::BLACK));
+    pieces_.push_back(std::make_unique<Pawn>(Position(4,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(5,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(6,1), Piece::BLACK));
     pieces_.push_back(std::make_unique<Pawn>(Position(7,1), Piece::BLACK));
@@ -48,13 +49,56 @@ Game_State::Game_State(){
     }
 }
 
-void  Game_State::make_move(Piece* piece, Position new_position){
-    board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
-    board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
-    piece->set_position(new_position);
+void Game_State::make_move(Piece* piece, Position new_position, Piece::Move_type Move_type){
+    switch(Move_type){
+        case Piece::NORMAL:
+            board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
+            piece->set_position(new_position);
+            piece->has_moved_ = true;
+            break;
+        case Piece::CASTLE:
+            //castling Queenside, rook move
+            if(piece->get_position().X_Coordinate > new_position.X_Coordinate){
+                board_[0][piece->get_position().Y_Coordinate]->set_position(Position(piece->get_position().X_Coordinate - 1,piece->get_position().Y_Coordinate));
+                board_[3][piece->get_position().Y_Coordinate] = board_[0][piece->get_position().Y_Coordinate];
+                board_[0][piece->get_position().Y_Coordinate] = nullptr;
+                std::cout << (board_[0][0] == nullptr) << std::endl;
+                board_[3][piece->get_position().Y_Coordinate]->has_moved_ = true;
+            }
+            //castling kingside, rook move
+            else{
+                board_[7][piece->get_position().Y_Coordinate]->set_position(Position(piece->get_position().X_Coordinate + 1,piece->get_position().Y_Coordinate));
+                board_[5][piece->get_position().Y_Coordinate] = board_[7][piece->get_position().Y_Coordinate];
+                board_[7][piece->get_position().Y_Coordinate] = nullptr;
+                std::cout << (board_[7][7] == nullptr) << std::endl;
+                board_[5][piece->get_position().Y_Coordinate]->has_moved_ = true;
+            }
+            //moving king
+            board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
+            piece->set_position(new_position);
+            piece->has_moved_ = true;
+            break;
+        case Piece::EN_PASSANT:
+            board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
+            piece->set_position(new_position);
+            piece->has_moved_ = true;
+            break;
+        case Piece::PROMOTION:
+            board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
+            piece->set_position(new_position);
+            piece->has_moved_ = true;
+            break;
+    }
 }
 
 bool Game_State::is_legal_move(Position position, Piece* piece, Piece* board[8][8]){
     auto legal_moves = piece->calculate_possible_moves(board);
-    return std::find(legal_moves.begin(), legal_moves.end(), position) != legal_moves.end();
+    auto it = std::find_if(legal_moves.begin(), legal_moves.end(),
+                 [&position](const std::pair<Position, Piece::Move_type>& pair)
+                 {return pair.first == position;});
+    return it != legal_moves.end();
 }

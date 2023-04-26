@@ -31,8 +31,14 @@ void Game::run() {
                             if(gamestate->is_legal_move(Mouse_position,
                                                         gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
                                                         gamestate->board_)){
-                                gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                     Mouse_position);
+                                if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::KING && (abs(Highlighted_piece->X_Coordinate - Mouse_position.X_Coordinate) > 1 || abs(Highlighted_piece->Y_Coordinate - Mouse_position.Y_Coordinate) > 1)){
+                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::CASTLE);
+                                }
+                                else{
+                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::NORMAL);
+                                }
                                 *Highlighted_piece = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){
