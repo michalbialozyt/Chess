@@ -1,1 +1,1 @@
-Project in progress. Implementing the chess game in C++. Future plans to develop a chess AI on it.
+Project in progress. Implementing the game of chess in C++. In future I plan to develop a chess AI based on it.
