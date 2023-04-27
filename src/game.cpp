@@ -10,6 +10,10 @@ void Game::run() {
     Position Mouse_position;
     auto Highlighted_piece = std::make_unique<Position>();
 
+    //turn suggest the team that is on the move
+    // 0 -> white, 1 -> black
+    Piece::Team turn = Piece::WHITE;
+
     bool quit = false;
     while (!quit) {
 
@@ -29,28 +33,46 @@ void Game::run() {
                     if(SDL_BUTTON_LEFT == event.button.button){
                         if(Highlighted_piece -> X_Coordinate != -1){
                             if(gamestate->is_legal_move(Mouse_position,
-                                                        gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                        gamestate->board_)){
+                                                        gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate])){
                                 if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::KING && (abs(Highlighted_piece->X_Coordinate - Mouse_position.X_Coordinate) > 1 || abs(Highlighted_piece->Y_Coordinate - Mouse_position.Y_Coordinate) > 1)){
                                     gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
                                                          Mouse_position, Piece::CASTLE);
+                                }
+                                else if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::PAWN && (Mouse_position.Y_Coordinate == 0 || Mouse_position.Y_Coordinate == 7)){
+                                        gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                             Mouse_position, Piece::PROMOTION);
                                 }
                                 else{
                                     gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
                                                          Mouse_position, Piece::NORMAL);
                                 }
+                                if(turn == Piece::WHITE){
+                                    turn = Piece::BLACK;
+                                }
+                                else{
+                                    turn = Piece::WHITE;
+                                }
                                 *Highlighted_piece = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){
-                                *Highlighted_piece = Mouse_position;
+                                if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate]->get_team() == turn){
+                                    *Highlighted_piece = Mouse_position;
+                                }
+                                else{
+                                    *Highlighted_piece = null_position;
+                                }
                             }
                             else{
                                 *Highlighted_piece = null_position;
                             }
                         }
                         else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr) {
-                            *Highlighted_piece = Mouse_position;
-                            std::cout << Mouse_position.X_Coordinate << Mouse_position.Y_Coordinate << std::endl;
+                            if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate]->get_team() == turn){
+                                *Highlighted_piece = Mouse_position;
+                            }
+                            else{
+                                *Highlighted_piece = null_position;
+                            }
                         }
                     }
                     break;

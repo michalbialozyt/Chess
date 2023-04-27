@@ -86,19 +86,29 @@ void Game_State::make_move(Piece* piece, Position new_position, Piece::Move_type
             piece->set_position(new_position);
             piece->has_moved_ = true;
             break;
+        // auto promoting to queen
         case Piece::PROMOTION:
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
-            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = piece;
-            piece->set_position(new_position);
-            piece->has_moved_ = true;
+            auto new_piece = std::make_unique<Queen>(Position(new_position.X_Coordinate,new_position.Y_Coordinate), piece->get_team());
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = new_piece.get();
+            pieces_.push_back(std::move(new_piece));
             break;
     }
 }
 
-bool Game_State::is_legal_move(Position position, Piece* piece, Piece* board[8][8]){
-    auto legal_moves = piece->calculate_possible_moves(board);
-    auto it = std::find_if(legal_moves.begin(), legal_moves.end(),
-                 [&position](const std::pair<Position, Piece::Move_type>& pair)
-                 {return pair.first == position;});
+bool Game_State::is_legal_move(Position position, Piece* piece){
+    auto legal_moves = piece->calculate_possible_moves(board_);
+    auto it = std::find(legal_moves.begin(), legal_moves.end(),position);
     return it != legal_moves.end();
+}
+
+std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team team) {
+    std::vector<Position> pos;
+    for(const auto& piece : pieces_){
+        if(piece->get_team() == team){
+            auto moves = piece->calculate_possible_moves(board_);
+            pos.insert(pos.end(), moves.begin(), moves.end());
+        }
+    }
+    return pos;
 }

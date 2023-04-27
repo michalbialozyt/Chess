@@ -15,9 +15,16 @@ private:
 public:
     Piece* board_[8][8];
     Game_State();
-    bool is_legal_move(Position position, Piece* piece, Piece* board[8][8]);
+    bool is_legal_move(Position position, Piece* piece);
     void make_move(Piece* piece, Position new_position, Piece::Move_type Move_type);
+
+    //for checkmate
+    std::vector<std::pair<Piece*,std::vector<Position>>> calculate_all_possible_moves (Piece::Team) const;
+    std::vector<Position> get_postitions_attacked_by_team (Piece::Team team);
     Piece::Team get_top_board_team () const {return top_board_team_;}
-    bool is_in_check() const {return false;}
+
+    //for move being legal
+    bool check_check_after_move(Piece::Team, Piece*) const {return false;}
+    ~Game_State(){}
 };
 
