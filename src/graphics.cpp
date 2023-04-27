@@ -90,8 +90,8 @@ void Graphics::Render_possible_moves(Piece* piece, Piece* board[8][8]) const {
             SDL_Rect cellRect;
             cellRect.w = WIDTH / 8;
             cellRect.h = HEIGHT / 64;
-            cellRect.x = pos.X_Coordinate * WIDTH / 8;
-            cellRect.y = pos.Y_Coordinate * HEIGHT / 8 + 70;
+            cellRect.x = pos.first.X_Coordinate * WIDTH / 8;
+            cellRect.y = pos.first.Y_Coordinate * HEIGHT / 8 + 70;
             SDL_SetRenderDrawColor(renderer_, 173, 216, 230, 255);
             SDL_RenderFillRect(renderer_, &cellRect);
         }

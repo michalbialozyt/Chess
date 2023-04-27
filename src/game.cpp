@@ -35,16 +35,16 @@ void Game::run() {
                             if(gamestate->is_legal_move(Mouse_position,
                                                         gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate])){
                                 if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::KING && (abs(Highlighted_piece->X_Coordinate - Mouse_position.X_Coordinate) > 1 || abs(Highlighted_piece->Y_Coordinate - Mouse_position.Y_Coordinate) > 1)){
-                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::CASTLE);
+                                    make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::CASTLE, gamestate->board_);
                                 }
                                 else if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::PAWN && (Mouse_position.Y_Coordinate == 0 || Mouse_position.Y_Coordinate == 7)){
-                                        gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                             Mouse_position, Piece::PROMOTION);
+                                        make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                             Mouse_position, Piece::PROMOTION, gamestate->board_);
                                 }
                                 else{
-                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::NORMAL);
+                                    make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::NORMAL, gamestate->board_);
                                 }
                                 if(turn == Piece::WHITE){
                                     turn = Piece::BLACK;
