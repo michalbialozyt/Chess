@@ -25,7 +25,7 @@ public:
 
     void Render_chessboard() const;
 
-    void Render_possible_moves(Piece* piece, Piece* board[8][8]) const;
+    void Render_possible_moves(Piece* piece, const std::unique_ptr<Game_State>& game_state) const;
 
     SDL_Window* window_;
 

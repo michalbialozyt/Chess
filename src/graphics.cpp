@@ -83,9 +83,9 @@ void Graphics::Render_all_pieces(Piece* board[8][8]) const {
     }
 }
 
-void Graphics::Render_possible_moves(Piece* piece, Piece* board[8][8]) const {
+void Graphics::Render_possible_moves(Piece* piece, const std::unique_ptr<Game_State>& game_state) const {
     if(piece != nullptr) {
-        auto legal_moves = piece->calculate_possible_moves(board);
+        auto legal_moves = game_state->calculate_possible_moves_with_check(piece);
         for (const auto &pos: legal_moves) {
             SDL_Rect cellRect;
             cellRect.w = WIDTH / 8;

@@ -4,7 +4,7 @@
 #include "pieces.hpp"
 
 //checking possible moves for the king/ not including taking or check
-std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
 
     for(int i = -1; i < 2; ++i){
@@ -29,7 +29,7 @@ std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves
 }
 
 //checking possible moves for the pawn not including taking or check or en passant
-std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     Position pos;
 
@@ -117,7 +117,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
 }
 
 //checking possible moves for the knight not including taking or check
-std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
 
     for(auto move : Knight_moves::horsey_moves_){
@@ -134,7 +134,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_mov
     return legal_moves;
 }
 
-void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, Piece* board[8][8]){
+void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, const Piece* const (&board)[8][8]){
     int i = position.X_Coordinate + 1;
     int j = position.Y_Coordinate;
 
@@ -203,7 +203,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
     }
 }
 
-void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, Piece* board[8][8]){
+void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, const Piece* const (&board)[8][8]){
     int i = position.X_Coordinate + 1;
     int j = position.Y_Coordinate + 1;
 
@@ -280,21 +280,21 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
 
 
 //legal moves for the rook not considering taking nad checks
-std::vector<std::pair<Position,Piece::Move_type>> Rook::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Rook::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_vertical_and_horizontal_moves(legal_moves, position_, board);
     return legal_moves;
 }
 
 //legal moves for the bishop not considering taking nad checks
-std::vector<std::pair<Position,Piece::Move_type>> Bishop::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Bishop::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_diagonal_moves(legal_moves, position_,board);
     return legal_moves;
 }
 
 //legal moves for the queen not considering taking nad checks
-std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_moves(Piece* board[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_vertical_and_horizontal_moves(legal_moves, position_,board);
     add_diagonal_moves(legal_moves, position_,board);

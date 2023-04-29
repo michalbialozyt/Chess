@@ -82,9 +82,8 @@ void Game::run() {
         SDL_RenderClear(graphics->renderer_);
         graphics->Render_chessboard();
         graphics->Render_all_pieces(gamestate->board_);
-        graphics->Render_possible_moves(
-                    gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                    gamestate->board_);
+//        graphics->Render_possible_moves(
+//                    gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate], gamestate);
         SDL_RenderPresent(graphics->renderer_);
     }
 }
