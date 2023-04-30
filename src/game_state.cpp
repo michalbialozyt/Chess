@@ -52,7 +52,7 @@ Game_State::Game_State(){
 
     white_king_ = board_[4][7];
     black_king_ = board_[4][0];
-
+    calculate_all_possible_moves_with_check();
 }
 
 void make_move(Piece* piece, Position new_position, Piece::Move_type Move_type, Piece* board[8][8]){
@@ -99,8 +99,9 @@ void make_move(Piece* piece, Position new_position, Piece::Move_type Move_type, 
     }
 }
 
-bool Game_State::is_legal_move(Position position, Piece* piece) const{
-    auto legal_moves = calculate_possible_moves_with_check(piece);
+bool Game_State::is_legal_move(Position position, Piece* piece) {
+    const auto& value = possible_moves_[piece];
+    auto legal_moves = possible_moves_[piece];
     auto it = std::find_if(legal_moves.begin(), legal_moves.end(),
                            [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
     return it != legal_moves.end();
@@ -153,12 +154,18 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     return it != posisions_attacked.end();
 }
 
-std::vector<std::pair<Position,Piece::Move_type>> Game_State::calculate_possible_moves_with_check(Piece* piece) const{
-    auto legal_moves = piece->calculate_possible_moves(board_);
-    for(auto it = legal_moves.begin(); it < legal_moves.end(); ++it){
-        if (!check_check_after_move(piece, it->first, it->second)){
-            legal_moves.erase(it);
+void Game_State::calculate_all_possible_moves_with_check(){
+    std::map<Piece*,std::vector<std::pair<Position, Piece::Move_type>>> legal_moves_for_all_pieces;
+    for(size_t i = 0; i < 8; ++i){
+        for(size_t j = 0; j < 8; ++j) {
+            if (board_[i][j] != nullptr) {
+                auto legal_moves = board_[i][j]->calculate_possible_moves(board_);
+                legal_moves.erase(std::remove_if(legal_moves.begin(), legal_moves.end(), [this, i, j](const auto& move) {
+                    return !check_check_after_move(board_[i][j], move.first, move.second);
+                }), legal_moves.end());
+                legal_moves_for_all_pieces.insert(std::make_pair(board_[i][j], legal_moves));
+            }
         }
     }
-    return legal_moves;
+    possible_moves_ = legal_moves_for_all_pieces;
 }
