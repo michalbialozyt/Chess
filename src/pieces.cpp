@@ -10,7 +10,7 @@ std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves
     for(int i = -1; i < 2; ++i){
         for(int j = -1; j < 2; ++j){
             Position pos = Position(position_.X_Coordinate + i,position_.Y_Coordinate + j);
-            if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8){
+            if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
                 legal_moves.emplace_back(pos, Piece::NORMAL);
             }
         }
@@ -138,7 +138,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
     int i = position.X_Coordinate + 1;
     int j = position.Y_Coordinate;
 
-    while(i <= 8){
+    while(i < 8){
         Position pos = Position(i,j);
         if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
             vec.emplace_back(pos, Piece::NORMAL);
@@ -171,7 +171,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
     i = position.X_Coordinate;
     j = position.Y_Coordinate + 1;
 
-    while(j <= 8){
+    while(j < 8){
         Position pos = Position(i,j);
         if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
             vec.emplace_back(pos, Piece::NORMAL);

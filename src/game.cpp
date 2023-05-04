@@ -35,16 +35,16 @@ void Game::run() {
                             if(gamestate->is_legal_move(Mouse_position,
                                                         gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate])){
                                 if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::KING && (abs(Highlighted_piece->X_Coordinate - Mouse_position.X_Coordinate) > 1 || abs(Highlighted_piece->Y_Coordinate - Mouse_position.Y_Coordinate) > 1)){
-                                    make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::CASTLE, gamestate->board_);
+                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::CASTLE, false);
                                 }
                                 else if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::PAWN && (Mouse_position.Y_Coordinate == 0 || Mouse_position.Y_Coordinate == 7)){
-                                        make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                             Mouse_position, Piece::PROMOTION, gamestate->board_);
+                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                             Mouse_position, Piece::PROMOTION, false);
                                 }
                                 else{
-                                    make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::NORMAL, gamestate->board_);
+                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                                         Mouse_position, Piece::NORMAL, false);
                                 }
                                 if(turn == Piece::WHITE){
                                     turn = Piece::BLACK;
@@ -52,6 +52,7 @@ void Game::run() {
                                 else{
                                     turn = Piece::WHITE;
                                 }
+                                gamestate->calculate_all_possible_moves_with_check();
                                 *Highlighted_piece = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){
@@ -82,8 +83,8 @@ void Game::run() {
         SDL_RenderClear(graphics->renderer_);
         graphics->Render_chessboard();
         graphics->Render_all_pieces(gamestate->board_);
-//        graphics->Render_possible_moves(
-//                    gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate], gamestate);
+        graphics->Render_possible_moves(
+                    gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate], gamestate);
         SDL_RenderPresent(graphics->renderer_);
     }
 }
