@@ -102,12 +102,12 @@ void Game_State::make_move(Piece* piece, Position new_position, Piece::Move_type
     }
 }
 
-void Game_State::undo_move(Piece *piece, Position original_position, Position new_position,
+void Game_State::undo_move(Piece *piece, Piece* taken_piece, Position original_position, Position new_position,
                            Piece::Move_type Move_type) {
     switch(Move_type){
         case Piece::NORMAL:
             board_[original_position.X_Coordinate][original_position.Y_Coordinate] = piece;
-            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = taken_piece;
             break;
         case Piece::CASTLE:
             //castling Queenside, rook move
@@ -126,11 +126,11 @@ void Game_State::undo_move(Piece *piece, Position original_position, Position ne
             break;
         case Piece::EN_PASSANT:
             board_[original_position.X_Coordinate][original_position.Y_Coordinate] = piece;
-            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = taken_piece;
             break;
             // auto promoting to queen
         case Piece::PROMOTION:
-            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = nullptr;
+            board_[new_position.X_Coordinate][new_position.Y_Coordinate] = taken_piece;
             auto new_piece = std::make_unique<Pawn>(Position(original_position.X_Coordinate,original_position.Y_Coordinate), piece->get_team());
             board_[original_position.X_Coordinate][original_position.Y_Coordinate] = new_piece.get();
             break;
@@ -154,7 +154,6 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
                     auto moves = board_[i][j] ->calculate_possible_moves(board_);
                     if(!moves.empty()) {
                         for(const auto& move : moves){
-                            std::cout << move.second << std::endl;
                             pos.push_back(move.first);
                         }
                     }
@@ -169,6 +168,7 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     Piece::Team attacking_team;
     Piece* attacked_king;
     Position original_position = piece->get_position();
+    Piece* taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
     make_move(piece, new_position, Move_type,true);
     if(piece->get_team() == Piece::WHITE){
         attacking_team = Piece::BLACK;
@@ -180,7 +180,7 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     }
     auto positions_attacked = get_postitions_attacked_by_team(attacking_team);
     auto it = std::find(positions_attacked.begin(), positions_attacked.end(), attacked_king->get_position());
-    undo_move(piece, original_position, new_position, Move_type);
+    undo_move(piece, taken_piece, original_position, new_position, Move_type);
     return it != positions_attacked.end();
 }
 

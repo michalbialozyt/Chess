@@ -13,7 +13,7 @@ class Graphics {
 public:
     const int HEIGHT = 640;
     const int WIDTH = 640;
-    const char* TITLE = "CHESS GAME <3";
+    const char* TITLE = "CHESS GAME";
 
     Graphics();
 

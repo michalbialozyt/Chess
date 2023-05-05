@@ -25,7 +25,7 @@ public:
 
     void calculate_all_possible_moves_with_check();
     void make_move(Piece* piece, Position new_position, Piece::Move_type Move_type, bool is_test);
-    void undo_move(Piece* piece, Position original_position, Position new_position,Piece::Move_type Move_type);
+    void undo_move(Piece* piece, Piece* taken_piece, Position original_position, Position new_position,Piece::Move_type Move_type);
     //for move being legal
     bool check_check_after_move(Piece* piece, Position new_position, Piece::Move_type Move_type);
     ~Game_State() = default;
