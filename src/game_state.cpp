@@ -56,7 +56,7 @@ Game_State::Game_State(){
     calculate_all_possible_moves_with_check();
 }
 
-void Game_State::make_move(Piece* piece, Position new_position, Piece::Move_type Move_type, bool is_test){
+void Game_State::make_move(Piece* piece, const Position& new_position, const Piece::Move_type& Move_type, bool is_test){
     switch(Move_type){
         case Piece::NORMAL:
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
@@ -97,7 +97,9 @@ void Game_State::make_move(Piece* piece, Position new_position, Piece::Move_type
             break;
     }
     if(!is_test){
-        piece->has_moved_ = true;
+        if(!(piece->get_piecetype() == Piece::PAWN && ((piece-> get_team() == Piece::BLACK && piece->get_position().Y_Coordinate == 3) || (piece-> get_team() == Piece::WHITE && piece->get_position().Y_Coordinate == 4))) && piece->has_moved_ != false){
+            piece->has_moved_ = true;
+        }
         piece->set_position(new_position);
     }
 }

@@ -72,6 +72,20 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+        if((team_ == Piece::BLACK  && position_.Y_Coordinate == 3) || (team_ == Piece::WHITE  && position_.Y_Coordinate == 3)){
+            if(board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr){
+                if(board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN &&
+                   !board[position_.X_Coordinate + 1][position_.Y_Coordinate]->has_moved_){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate), Piece::EN_PASSANT);
+                }
+            }
+            else if(board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr){
+                if(board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN &&
+                   !board[position_.X_Coordinate - 1][position_.Y_Coordinate]->has_moved_){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate), Piece::EN_PASSANT);
+                }
+            }
+        }
     }
     else {
         pos = Position(position_.X_Coordinate, position_.Y_Coordinate - 1);
