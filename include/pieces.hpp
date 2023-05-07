@@ -5,6 +5,7 @@
 #pragma once
 #include <vector>
 #include "position.hpp"
+#include <set>
 
 class Piece{
 public:
@@ -19,13 +20,15 @@ public:
     };
     Piece(const Position& start_position, const Team& team, const Piece_type& piecetype) : team_(team), piecetype_(piecetype), position_(start_position) {}
     Piece(const Piece& other) = default;
-    Position get_position () const {return position_;}
-    Team get_team () const {return team_;}
-    Piece_type get_piecetype() const {return piecetype_;}
+    [[nodiscard]] Position get_position () const {return position_;}
+    [[nodiscard]] Team get_team () const {return team_;}
+    [[nodiscard]] Piece_type get_piecetype() const {return piecetype_;}
     virtual const char* get_image_name() = 0;
-    virtual std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const = 0;
+    [[nodiscard]] virtual std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const = 0;
     void set_position(Position new_position) {position_ = new_position;}
     virtual ~Piece() = default;
+    virtual void set_en_passant(bool) {};
+    [[nodiscard]] virtual bool check_en_passant() const {return false;}
     bool has_moved_ = false;
 
 protected:
@@ -37,16 +40,20 @@ protected:
 class Pawn: public Piece {
 public:
     Pawn(const Pawn& other) = default;
-    Pawn(const Position& start_position, Team team) : Piece(start_position, team, PAWN){}
+    Pawn(const Position& start_position, Team team) : Piece(start_position, team, PAWN), en_passant_enabled(false){}
     const char* get_image_name() override;
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    void set_en_passant(bool setting) override {en_passant_enabled = setting;}
+    [[nodiscard]] bool check_en_passant() const override {return en_passant_enabled;}
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+private:
+    bool en_passant_enabled;
 };
 
 class King: public Piece {
 public:
 
     King(const Position& start_position, const Team& team) : Piece(start_position, team,KING){}
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     const char* get_image_name() override;
     ~King() override = default;
 };
@@ -54,7 +61,7 @@ public:
 class Queen: public Piece {
 public:
     Queen(const Position& start_position, const Team& team) : Piece(start_position, team, QUEEN){}
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     const char* get_image_name() override;
     ~Queen() override = default;
 };
@@ -62,7 +69,7 @@ public:
 class Knight: public Piece {
 public:
     Knight(const Position& start_position, const Team& team) : Piece(start_position, team, KNIGHT){}
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     const char* get_image_name() override;
     ~Knight() override = default;
 };
@@ -70,7 +77,7 @@ public:
 class Bishop: public Piece {
 public:
     Bishop(const Position& start_position, const Team& team) : Piece(start_position, team, BISHOP){}
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     const char* get_image_name() override;
     ~Bishop() override = default;
 };
@@ -79,7 +86,7 @@ class Rook: public Piece {
 public:
     Rook(const Rook& other) = default;
     Rook(const Position& start_position, const Team& team) : Piece(start_position, team, ROOK){}
-    std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     const char* get_image_name() override;
     ~Rook() override = default;
 };

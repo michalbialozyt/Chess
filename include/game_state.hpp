@@ -7,21 +7,23 @@
 #include "pieces.hpp"
 #include <memory>
 #include <map>
+#include <unordered_set>
 
 class Game_State{
 private:
     Piece* white_king_;
     Piece* black_king_;
-    Piece::Team top_board_team_;
+    //Piece::Team top_board_team_;
     std::vector<std::unique_ptr<Piece>> pieces_;
 public:
-    Piece* board_[8][8];
+    Piece* board_[8][8]{};
     std::map<Piece*,std::vector<std::pair<Position, Piece::Move_type>>> possible_moves_;
+
     Game_State();
     bool is_legal_move(Position position, Piece* piece);
     //for checkmate
     std::vector<Position> get_postitions_attacked_by_team (Piece::Team team) const;
-    Piece::Team get_top_board_team () const {return top_board_team_;}
+    //Piece::Team get_top_board_team () const {return top_board_team_;}
 
     void calculate_all_possible_moves_with_check();
     void make_move(Piece* piece, const Position& new_position, const Piece::Move_type& Move_type, bool is_test);

@@ -10,8 +10,13 @@ std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves
     for(int i = -1; i < 2; ++i){
         for(int j = -1; j < 2; ++j){
             Position pos = Position(position_.X_Coordinate + i,position_.Y_Coordinate + j);
-            if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
-                legal_moves.emplace_back(pos, Piece::NORMAL);
+            if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8){
+                if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr || board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
+                    legal_moves.emplace_back(pos, Piece::NORMAL);
+                }
+//                else if(board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_){
+//                    legal_moves.emplace_back(pos, Piece::NORMAL);
+//                }
             }
         }
     }
@@ -36,7 +41,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
     if (team_ == BLACK) {
         pos = Position(position_.X_Coordinate, position_.Y_Coordinate + 1);
         if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
-            if(pos.Y_Coordinate == 6){
+            if(position_.Y_Coordinate == 6){
                 legal_moves.emplace_back(pos, Piece::PROMOTION);
             }
             else{
@@ -53,7 +58,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
         pos.X_Coordinate = position_.X_Coordinate + 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
-                if(pos.Y_Coordinate == 6){
+                if(position_.Y_Coordinate == 6){
                     legal_moves.emplace_back(pos, Piece::PROMOTION);
                 }
                 else{
@@ -64,7 +69,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
         pos.X_Coordinate = position_.X_Coordinate - 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
-                if(pos.Y_Coordinate == 6){
+                if(position_.Y_Coordinate == 6){
                     legal_moves.emplace_back(pos, Piece::PROMOTION);
                 }
                 else{
@@ -72,17 +77,14 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
-        if((team_ == Piece::BLACK  && position_.Y_Coordinate == 3) || (team_ == Piece::WHITE  && position_.Y_Coordinate == 3)){
-            if(board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr){
-                if(board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN &&
-                   !board[position_.X_Coordinate + 1][position_.Y_Coordinate]->has_moved_){
-                    legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate), Piece::EN_PASSANT);
+        if(position_.Y_Coordinate == 4) {
+            if (board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
+                if (board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate + 1][position_.Y_Coordinate]->check_en_passant()){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate + 1),Piece::EN_PASSANT);
                 }
-            }
-            else if(board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr){
-                if(board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN &&
-                   !board[position_.X_Coordinate - 1][position_.Y_Coordinate]->has_moved_){
-                    legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate), Piece::EN_PASSANT);
+            } else if (board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
+                if (board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate - 1][position_.Y_Coordinate]->check_en_passant()){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate + 1),Piece::EN_PASSANT);
                 }
             }
         }
@@ -90,7 +92,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
     else {
         pos = Position(position_.X_Coordinate, position_.Y_Coordinate - 1);
         if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr) {
-            if(pos.Y_Coordinate == 1){
+            if(position_.Y_Coordinate == 1){
                 legal_moves.emplace_back(pos, Piece::PROMOTION);
             }
             else{
@@ -107,7 +109,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
         pos.X_Coordinate = position_.X_Coordinate + 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
-                if(pos.Y_Coordinate == 1){
+                if(position_.Y_Coordinate == 1){
                     legal_moves.emplace_back(pos, Piece::PROMOTION);
                 }
                 else{
@@ -118,11 +120,22 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
         pos.X_Coordinate = position_.X_Coordinate - 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
-                if(pos.Y_Coordinate == 1){
+                if(position_.Y_Coordinate == 1){
                     legal_moves.emplace_back(pos, Piece::PROMOTION);
                 }
                 else{
                     legal_moves.emplace_back(pos, Piece::NORMAL);
+                }
+            }
+        }
+        if(position_.Y_Coordinate == 3) {
+            if (board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
+                if (board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate + 1][position_.Y_Coordinate]->check_en_passant()){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate - 1),Piece::EN_PASSANT);
+                }
+            } else if (board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
+                if (board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate - 1][position_.Y_Coordinate]->check_en_passant()){
+                    legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate - 1),Piece::EN_PASSANT);
                 }
             }
         }
@@ -317,54 +330,54 @@ std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_move
 
 const char* Pawn::get_image_name() {
     if(team_ == BLACK){
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_pawn.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_pawn.png)";
     }
     else{
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_pawn.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_pawn.png)";
     }
 }
 
 const char* King::get_image_name() {
     if(team_ == BLACK){
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_king.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_king.png)";
     }
     else{
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_king.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_king.png)";
     }
 }
 
 const char* Queen::get_image_name() {
     if(team_ == BLACK){
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_Queen.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_Queen.png)";
     }
     else{
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_Queen.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_Queen.png)";
     }
 }
 
 const char* Knight::get_image_name() {
     if(team_ == BLACK){
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_horse.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_horse.png)";
     }
     else{
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_horse.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_horse.png)";
     }
 }
 
 const char* Rook::get_image_name() {
     if(team_ == BLACK){
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_rook.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_rook.png)";
     }
     else{
-        return "C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_rook.png";
+        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_rook.png)";
     }
 }
 
 const char* Bishop::get_image_name() {
     if(team_ == BLACK){
-        return "C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/dark_bishop.png";
+        return R"(C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/dark_bishop.png)";
     }
     else{
-        return "C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/white_bishop.png";
+        return R"(C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/white_bishop.png)";
     }
 }

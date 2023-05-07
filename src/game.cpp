@@ -1,6 +1,7 @@
 //
 // Created by michalbialozyt on 25.04.2023.
 //
+#include <algorithm>
 #include "game.hpp"
 void Game::run() {
     auto graphics = std::make_unique<Graphics>();
@@ -9,9 +10,8 @@ void Game::run() {
     Position null_position;
     Position Mouse_position;
     auto Highlighted_piece = std::make_unique<Position>();
+    Piece* Highlighted_piece_pointer;
 
-    //turn suggest the team that is on the move
-    // 0 -> white, 1 -> black
     Piece::Team turn = Piece::WHITE;
 
     bool quit = false;
@@ -32,20 +32,14 @@ void Game::run() {
                 case SDL_MOUSEBUTTONDOWN:
                     if(SDL_BUTTON_LEFT == event.button.button){
                         if(Highlighted_piece -> X_Coordinate != -1){
-                            if(gamestate->is_legal_move(Mouse_position,
-                                                        gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate])){
-                                if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::KING && (abs(Highlighted_piece->X_Coordinate - Mouse_position.X_Coordinate) > 1 || abs(Highlighted_piece->Y_Coordinate - Mouse_position.Y_Coordinate) > 1)){
-                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::CASTLE, false);
-                                }
-                                else if(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate]->get_piecetype() == Piece::PAWN && (Mouse_position.Y_Coordinate == 0 || Mouse_position.Y_Coordinate == 7)){
-                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                             Mouse_position, Piece::PROMOTION, false);
-                                }
-                                else{
-                                    gamestate->make_move(gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
-                                                         Mouse_position, Piece::NORMAL, false);
-                                }
+                            Highlighted_piece_pointer = gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate];
+                            if(gamestate->is_legal_move(Mouse_position,Highlighted_piece_pointer)) {
+                                auto move = std::find_if(gamestate->possible_moves_[Highlighted_piece_pointer].begin(),
+                                                         gamestate->possible_moves_[Highlighted_piece_pointer].end(),
+                                                         [Mouse_position](const std::pair<Position, Piece::Move_type> &p) {return p.first == Mouse_position;});
+                                gamestate->make_move(
+                                        gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                        move->first, move->second, false);
                                 if(turn == Piece::WHITE){
                                     turn = Piece::BLACK;
                                 }
