@@ -54,6 +54,8 @@ Game_State::Game_State(){
     white_king_ = board_[4][7];
     black_king_ = board_[4][0];
     calculate_all_possible_moves_with_check(Piece::WHITE);
+    num_of_pieces_on_the_board_ = 32;
+    number_of_turns_without_progress_ = 0;
 }
 
 void Game_State::make_move(Piece* piece, const Position& new_position, const Piece::Move_type& Move_type, bool is_test){
@@ -120,7 +122,11 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
         pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
             return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
         }), pieces_.end());
-
+        if(num_of_pieces_on_the_board_ != pieces_.size() || piece->get_piecetype() == Piece::PAWN){
+            number_of_turns_without_progress_ = 0;
+        }
+        num_of_pieces_on_the_board_ = pieces_.size();
+        ++number_of_turns_without_progress_;
     }
 }
 
@@ -226,19 +232,38 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     return it != positions_attacked.end();
 }
 
-bool Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
-    bool no_checkmate = false;
+void Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
     possible_moves_.clear();
     for(const auto& piece : pieces_){
         if (piece->get_team() == team_on_move){
             auto legal_moves = piece->calculate_possible_moves(board_);
             for(const auto& move : legal_moves){
                 if(!check_check_after_move(piece.get(),move.first, move.second)){
-                    no_checkmate = true;
                     possible_moves_[piece.get()].push_back(move);
                 }
             }
         }
     }
-    return no_checkmate;
+}
+
+Game_State::Game_Result Game_State::check_game_result(){
+    if(possible_moves_.empty()){
+        std::vector<Position> attacked_by_white = get_postitions_attacked_by_team(Piece::WHITE);
+        std::vector<Position> attacked_by_black = get_postitions_attacked_by_team(Piece::BLACK);
+        auto it = std::find(attacked_by_white.cbegin(), attacked_by_white.cend(), black_king_->get_position());
+        if(it != attacked_by_white.cend()){
+            return Game_State::WHITE_WIN;
+        }
+        auto it2 = std::find(attacked_by_black.cbegin(), attacked_by_black.cend(), white_king_->get_position());
+        if(it2 != attacked_by_black.cend()){
+            return Game_State::BLACK_WIN;
+        }
+        else{
+            return Game_State::DRAW_BY_STALEMATE;
+        }
+    }
+    if(number_of_turns_without_progress_ == 50){
+        return Game_State::DRAW_BY_50_MOVES;
+    }
+    return Game_State::NO_RESULT;
 }

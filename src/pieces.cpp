@@ -14,9 +14,6 @@ std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves
                 if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr || board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
                     legal_moves.emplace_back(pos, Piece::NORMAL);
                 }
-//                else if(board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_){
-//                    legal_moves.emplace_back(pos, Piece::NORMAL);
-//                }
             }
         }
     }
@@ -147,7 +144,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
 std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
 
-    for(auto move : Knight_moves::horsey_moves_){
+    for(const auto& move : Knight_moves::horsey_moves_){
         Position pos = Position(position_.X_Coordinate + move.first, position_.Y_Coordinate + move.second);
         if(pos.X_Coordinate < 8 && pos.X_Coordinate >= 0 && pos.Y_Coordinate < 8 && pos.Y_Coordinate >= 0){
             if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr || board[pos.X_Coordinate][pos.Y_Coordinate] -> get_team() != team_){
@@ -372,9 +369,9 @@ const char* Rook::get_image_name() {
 
 const char* Bishop::get_image_name() {
     if(team_ == BLACK){
-        return R"(C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/dark_bishop.png)";
+        return R"(C:\\Users\\bialo\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_bishop.png)";
     }
     else{
-        return R"(C:/Users/bialo/OneDrive/Pulpit/Studia/Projects/git/Chess/Chess/images/white_bishop.png)";
+        return R"(C:\\Users\\bialo\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_bishop.png)";
     }
 }

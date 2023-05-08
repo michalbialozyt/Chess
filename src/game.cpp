@@ -6,39 +6,35 @@
 void Game::run() {
     auto graphics = std::make_unique<Graphics>();
     auto gamestate = std::make_unique<Game_State>();
+    auto Highlighted_position = std::make_unique<Position>();
 
     Position null_position;
     Position Mouse_position;
-    auto Highlighted_piece = std::make_unique<Position>();
-    Piece* Highlighted_piece_pointer;
-
+    Piece* Highlighted_piece;
+    Game_State::Game_Result result;
     Piece::Team turn = Piece::WHITE;
-    bool no_checkmate = true;
     bool quit = false;
-    while (!quit) {
 
+    while (!quit) {
         SDL_GetMouseState(&(Mouse_position.X_Coordinate), &(Mouse_position.Y_Coordinate));
         Mouse_position.X_Coordinate = Mouse_position.X_Coordinate/80;
         Mouse_position.Y_Coordinate = Mouse_position.Y_Coordinate/80;
-
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-
             switch(event.type){
                 case SDL_QUIT:
                     quit = true;
                     break;
-
                 case SDL_MOUSEBUTTONDOWN:
                     if(SDL_BUTTON_LEFT == event.button.button){
-                        if(Highlighted_piece -> X_Coordinate != -1){
-                            Highlighted_piece_pointer = gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate];
-                            if(gamestate->is_legal_move(Mouse_position,Highlighted_piece_pointer)) {
-                                auto move = std::find_if(gamestate->possible_moves_[Highlighted_piece_pointer].begin(),
-                                                         gamestate->possible_moves_[Highlighted_piece_pointer].end(),
+                        if(Highlighted_position -> X_Coordinate != -1){
+                            Highlighted_piece = gamestate->board_[Highlighted_position->X_Coordinate][Highlighted_position->Y_Coordinate];
+                            if(gamestate->is_legal_move(Mouse_position,Highlighted_piece)) {
+                                auto move = std::find_if(gamestate->possible_moves_[Highlighted_piece].begin(),
+                                                         gamestate->possible_moves_[Highlighted_piece].end(),
                                                          [Mouse_position](const std::pair<Position, Piece::Move_type> &p) {return p.first == Mouse_position;});
                                 gamestate->make_move(
-                                        gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate],
+                                        gamestate->board_[Highlighted_position->X_Coordinate][Highlighted_position->Y_Coordinate],
                                         move->first, move->second, false);
                                 if(turn == Piece::WHITE){
                                     turn = Piece::BLACK;
@@ -46,36 +42,48 @@ void Game::run() {
                                 else{
                                     turn = Piece::WHITE;
                                 }
-                                no_checkmate = gamestate->calculate_all_possible_moves_with_check(turn);
-                                if(!no_checkmate){
-                                    if(turn == Piece::BLACK) {
-                                        std::cout << "CHECKMATE, WHITE WON!" << std::endl;
-                                    }
-                                    else{
-                                        std::cout << "CHECKMATE, BLACK WON!" << std::endl;
-                                    }
-                                    quit = true;
+                                gamestate->calculate_all_possible_moves_with_check(turn);
+                                result = gamestate->check_game_result();
+                                switch(result){
+                                    case Game_State::NO_RESULT:
+                                        break;
+                                    case Game_State::Game_Result::BLACK_WIN:
+                                        quit = true;
+                                        std::cout << " BLACK WINS BY CHECKMATE " << std::endl;
+                                        break;
+                                    case Game_State::Game_Result::WHITE_WIN:
+                                        quit = true;
+                                        std::cout << " WHITE WINS BY CHECKMATE " << std::endl;
+                                        break;
+                                    case Game_State::Game_Result::DRAW_BY_STALEMATE:
+                                        quit = true;
+                                        std::cout << " DRAW BY STALEMATE" << std::endl;
+                                        break;
+                                    case Game_State::Game_Result::DRAW_BY_50_MOVES:
+                                        quit = true;
+                                        std::cout << " DRAW BY 50 MOVES" << std::endl;
+                                        break;
                                 }
-                                *Highlighted_piece = null_position;
+                            *Highlighted_position = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){
                                 if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate]->get_team() == turn){
-                                    *Highlighted_piece = Mouse_position;
+                                    *Highlighted_position = Mouse_position;
                                 }
                                 else{
-                                    *Highlighted_piece = null_position;
+                                    *Highlighted_position = null_position;
                                 }
                             }
                             else{
-                                *Highlighted_piece = null_position;
+                                *Highlighted_position = null_position;
                             }
                         }
                         else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr) {
                             if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate]->get_team() == turn){
-                                *Highlighted_piece = Mouse_position;
+                                *Highlighted_position = Mouse_position;
                             }
                             else{
-                                *Highlighted_piece = null_position;
+                                *Highlighted_position = null_position;
                             }
                         }
                     }
@@ -85,9 +93,9 @@ void Game::run() {
 
         SDL_RenderClear(graphics->renderer_);
         graphics->Render_chessboard();
-        graphics->Render_all_pieces(gamestate->board_);
         graphics->Render_possible_moves(
-                    gamestate->board_[Highlighted_piece->X_Coordinate][Highlighted_piece->Y_Coordinate], gamestate);
+                    gamestate->board_[Highlighted_position->X_Coordinate][Highlighted_position->Y_Coordinate], gamestate);
+        graphics->Render_all_pieces(gamestate->board_);
         SDL_RenderPresent(graphics->renderer_);
     }
 }
