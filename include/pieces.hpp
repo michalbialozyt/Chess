@@ -4,8 +4,8 @@
 
 #pragma once
 #include <vector>
-#include "position.hpp"
 #include <set>
+#include "position.hpp"
 
 class Piece{
 public:
@@ -31,6 +31,13 @@ public:
     [[nodiscard]] virtual bool check_en_passant() const {return false;}
     bool has_moved_ = false;
 
+    bool operator==(const Piece& other) const  {
+        return this->position_ == other.get_position() && this->team_ == other.get_team() && this->piecetype_ == other.get_piecetype() ;
+    }
+    bool operator!=(const Piece& other) const  {
+        return this->position_ != other.get_position() || this->team_ != other.get_team() || this->piecetype_ != other.get_piecetype() ;
+    }
+
 protected:
     Team team_;
     Piece_type piecetype_;
@@ -45,6 +52,7 @@ public:
     void set_en_passant(bool setting) override {en_passant_enabled = setting;}
     [[nodiscard]] bool check_en_passant() const override {return en_passant_enabled;}
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+
 private:
     bool en_passant_enabled;
 };
@@ -95,5 +103,5 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
 void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, const Piece* const (&board)[8][8]);
 
 struct Knight_moves{
-    inline static std::vector<std::pair<int,int>> horsey_moves_{std::make_pair(1,2), std::make_pair(1,-2),std::make_pair(-1,2),std::make_pair(-1,-2),std::make_pair(2,1),std::make_pair(-2,-1),std::make_pair(-2,1),std::make_pair(2,-1)};
+    inline static std::set<std::pair<int,int>> horsey_moves_{std::make_pair(1,2), std::make_pair(1,-2),std::make_pair(-1,2),std::make_pair(-1,-2),std::make_pair(2,1),std::make_pair(-2,-1),std::make_pair(-2,1),std::make_pair(2,-1)};
 };

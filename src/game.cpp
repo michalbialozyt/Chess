@@ -13,7 +13,7 @@ void Game::run() {
     Piece* Highlighted_piece_pointer;
 
     Piece::Team turn = Piece::WHITE;
-
+    bool no_checkmate = true;
     bool quit = false;
     while (!quit) {
 
@@ -46,7 +46,16 @@ void Game::run() {
                                 else{
                                     turn = Piece::WHITE;
                                 }
-                                gamestate->calculate_all_possible_moves_with_check();
+                                no_checkmate = gamestate->calculate_all_possible_moves_with_check(turn);
+                                if(!no_checkmate){
+                                    if(turn == Piece::BLACK) {
+                                        std::cout << "CHECKMATE, WHITE WON!" << std::endl;
+                                    }
+                                    else{
+                                        std::cout << "CHECKMATE, BLACK WON!" << std::endl;
+                                    }
+                                    quit = true;
+                                }
                                 *Highlighted_piece = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){

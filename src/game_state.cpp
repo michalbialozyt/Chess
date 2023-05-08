@@ -53,7 +53,7 @@ Game_State::Game_State(){
 
     white_king_ = board_[4][7];
     black_king_ = board_[4][0];
-    calculate_all_possible_moves_with_check();
+    calculate_all_possible_moves_with_check(Piece::WHITE);
 }
 
 void Game_State::make_move(Piece* piece, const Position& new_position, const Piece::Move_type& Move_type, bool is_test){
@@ -97,7 +97,9 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             break;
         // auto promoting to queen
         case Piece::PROMOTION:
+            auto it = std::find_if(pieces_.begin(), pieces_.end(),[piece](const std::unique_ptr<Piece>& p) {return *piece == *p;});
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
+            pieces_.erase(it);
             auto new_piece = std::make_unique<Queen>(Position(new_position.X_Coordinate,new_position.Y_Coordinate), piece->get_team());
             board_[new_position.X_Coordinate][new_position.Y_Coordinate] = new_piece.get();
             piece = new_piece.get();
@@ -113,6 +115,12 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             piece->set_en_passant(true);
         }
         piece->has_moved_ = true;
+
+        //remove all pieces that are no longer on the board from the pieces_ vector
+        pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
+            return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
+        }), pieces_.end());
+
     }
 }
 
@@ -150,10 +158,12 @@ void Game_State::undo_move(Piece *piece, Piece* taken_piece, Position original_p
             break;
             // auto promoting to queen
         case Piece::PROMOTION:
+            auto it = std::find_if(pieces_.begin(), pieces_.end(),[piece](const std::unique_ptr<Piece>& p) {return *piece == *p;});
             board_[new_position.X_Coordinate][new_position.Y_Coordinate] = taken_piece;
+            pieces_.erase(it);
             auto new_piece = std::make_unique<Pawn>(Position(original_position.X_Coordinate,original_position.Y_Coordinate), piece->get_team());
             board_[original_position.X_Coordinate][original_position.Y_Coordinate] = new_piece.get();
-            piece = new_piece.get();
+            //piece = new_piece.get();
             pieces_.push_back(std::move(new_piece));
             break;
     }
@@ -185,9 +195,9 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
 }
 
 bool Game_State::check_check_after_move(Piece* piece, Position new_position, Piece::Move_type Move_type) {
-    Piece::Team attacking_team;
-    Position kings_position;
-    Piece* taken_piece;
+    Piece::Team attacking_team = Piece::WHITE;
+    Position kings_position = black_king_->get_position();
+    Piece* taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
     Position original_position = piece->get_position();
 
     if(Move_type == Piece::EN_PASSANT){
@@ -198,19 +208,12 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
             taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate - 1];
         }
     }
-    else{
-        taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
-    }
 
     make_move(piece, new_position, Move_type,true);
 
     if(piece->get_team() == Piece::WHITE){
         attacking_team = Piece::BLACK;
         kings_position = white_king_->get_position();
-    }
-    else{
-        attacking_team = Piece::WHITE;
-        kings_position = black_king_->get_position();
     }
 
     if(piece->get_piecetype() == Piece::KING && piece->get_team() != attacking_team){
@@ -223,19 +226,19 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     return it != positions_attacked.end();
 }
 
-void Game_State::calculate_all_possible_moves_with_check(){
-    std::map<Piece*,std::vector<std::pair<Position, Piece::Move_type>>> legal_moves_for_all_pieces;
-    for(size_t i = 0; i < 8; ++i){
-        for(size_t j = 0; j < 8; ++j) {
-            if (board_[i][j] != nullptr) {
-                auto legal_moves = board_[i][j]->calculate_possible_moves(board_);
-                for(const auto& move : legal_moves){
-                    if(!check_check_after_move(board_[i][j],move.first, move.second)){
-                        legal_moves_for_all_pieces[board_[i][j]].push_back(move);
-                    }
+bool Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
+    bool no_checkmate = false;
+    possible_moves_.clear();
+    for(const auto& piece : pieces_){
+        if (piece->get_team() == team_on_move){
+            auto legal_moves = piece->calculate_possible_moves(board_);
+            for(const auto& move : legal_moves){
+                if(!check_check_after_move(piece.get(),move.first, move.second)){
+                    no_checkmate = true;
+                    possible_moves_[piece.get()].push_back(move);
                 }
             }
         }
     }
-    possible_moves_ = legal_moves_for_all_pieces;
+    return no_checkmate;
 }

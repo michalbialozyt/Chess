@@ -150,10 +150,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_mov
     for(auto move : Knight_moves::horsey_moves_){
         Position pos = Position(position_.X_Coordinate + move.first, position_.Y_Coordinate + move.second);
         if(pos.X_Coordinate < 8 && pos.X_Coordinate >= 0 && pos.Y_Coordinate < 8 && pos.Y_Coordinate >= 0){
-            if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr){
-                legal_moves.emplace_back(pos, Piece::NORMAL);
-            }
-            else if(board[pos.X_Coordinate][pos.Y_Coordinate] -> get_team() != team_){
+            if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr || board[pos.X_Coordinate][pos.Y_Coordinate] -> get_team() != team_){
                 legal_moves.emplace_back(pos, Piece::NORMAL);
             }
         }
