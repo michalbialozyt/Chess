@@ -53,9 +53,9 @@ Game_State::Game_State(){
 
     white_king_ = board_[4][7];
     black_king_ = board_[4][0];
-    calculate_all_possible_moves_with_check(Piece::WHITE);
     num_of_pieces_on_the_board_ = 32;
     number_of_turns_without_progress_ = 0;
+    calculate_all_possible_moves_with_check(Piece::WHITE);
 }
 
 void Game_State::make_move(Piece* piece, const Position& new_position, const Piece::Move_type& Move_type, bool is_test){
@@ -113,6 +113,8 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             elem->set_en_passant(false);
         }
         piece->set_position(new_position);
+
+        //allowing pawn to get captured by en_passant
         if(piece->get_piecetype() == Piece::PAWN && ((piece-> get_team() == Piece::BLACK && piece->get_position().Y_Coordinate == 3) || (piece-> get_team() == Piece::WHITE && piece->get_position().Y_Coordinate == 4)) && !piece->has_moved_){
             piece->set_en_passant(true);
         }
@@ -176,7 +178,7 @@ void Game_State::undo_move(Piece *piece, Piece* taken_piece, Position original_p
 }
 
 bool Game_State::is_legal_move(Position position, Piece* piece) {
-    auto it = std::find_if( possible_moves_[piece].begin(),  possible_moves_[piece].end(),
+    auto it = std::find_if( possible_moves_[piece].cbegin(),  possible_moves_[piece].cend(),
                            [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
     return it !=  possible_moves_[piece].end();
 }
@@ -201,10 +203,10 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
 }
 
 bool Game_State::check_check_after_move(Piece* piece, Position new_position, Piece::Move_type Move_type) {
-    Piece::Team attacking_team = Piece::WHITE;
-    Position kings_position = black_king_->get_position();
-    Piece* taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
-    Position original_position = piece->get_position();
+    auto attacking_team = Piece::WHITE;
+    auto kings_position = black_king_->get_position();
+    auto taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
+    auto original_position = piece->get_position();
 
     if(Move_type == Piece::EN_PASSANT){
         if(new_position.Y_Coordinate == 2){
@@ -227,7 +229,7 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     }
 
     auto positions_attacked = get_postitions_attacked_by_team(attacking_team);
-    auto it = std::find(positions_attacked.begin(), positions_attacked.end(), kings_position);
+    auto it = std::find(positions_attacked.cbegin(), positions_attacked.cend(), kings_position);
     undo_move(piece, taken_piece, original_position, new_position, Move_type);
     return it != positions_attacked.end();
 }
@@ -248,8 +250,8 @@ void Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_mov
 
 Game_State::Game_Result Game_State::check_game_result(){
     if(possible_moves_.empty()){
-        std::vector<Position> attacked_by_white = get_postitions_attacked_by_team(Piece::WHITE);
-        std::vector<Position> attacked_by_black = get_postitions_attacked_by_team(Piece::BLACK);
+        auto attacked_by_white = get_postitions_attacked_by_team(Piece::WHITE);
+        auto attacked_by_black = get_postitions_attacked_by_team(Piece::BLACK);
         auto it = std::find(attacked_by_white.cbegin(), attacked_by_white.cend(), black_king_->get_position());
         if(it != attacked_by_white.cend()){
             return Game_State::WHITE_WIN;

@@ -46,8 +46,8 @@ void Graphics::Render_chessboard() const {
     }
 }
 
-void Graphics::Render_piece(const char* image_dir, int X, int Y) const {
-    SDL_Surface* surface = IMG_Load(image_dir);
+void Graphics::Render_piece(const std::string& image_dir, int X, int Y) const {
+    SDL_Surface* surface = IMG_Load(image_dir.c_str());
     if (surface == nullptr) {
         std::cout << "Failed to load image: " << image_dir << ". SDL_image Error: " << IMG_GetError() << std::endl;
     }
@@ -90,7 +90,7 @@ void Graphics::Render_possible_moves(Piece* piece, const std::unique_ptr<Game_St
             for(int y = 0; y < HEIGHT / 8; y++) {
                 for(int x = 0; x < WIDTH / 8; x++) {
 
-                    double dist = sqrt((x - WIDTH / 8 + 40) * (x - WIDTH / 8 + 40) + (y - HEIGHT / 8 + 40) * (y - HEIGHT / 8 + 40));
+                    double dist = sqrt((x - cellRect.w + 40) * (x - cellRect.w + 40) + (y - cellRect.h + 40) * (y - cellRect.h + 40));
                     double alpha = 0.2;
                     if((dist > 15 && !is_occupied) || (is_occupied && (dist < 33 || dist > 36))){
                         alpha = 0.0;

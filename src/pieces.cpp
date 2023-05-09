@@ -300,21 +300,21 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
 }
 
 
-//legal moves for the rook not considering taking nad checks
+//legal moves for the rook not considering checks
 std::vector<std::pair<Position,Piece::Move_type>> Rook::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_vertical_and_horizontal_moves(legal_moves, position_, board);
     return legal_moves;
 }
 
-//legal moves for the bishop not considering taking nad checks
+//legal moves for the bishop not considering checks
 std::vector<std::pair<Position,Piece::Move_type>> Bishop::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_diagonal_moves(legal_moves, position_,board);
     return legal_moves;
 }
 
-//legal moves for the queen not considering taking nad checks
+//legal moves for the queen not considering checks
 std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_vertical_and_horizontal_moves(legal_moves, position_,board);
@@ -322,56 +322,56 @@ std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_move
     return legal_moves;
 }
 
-const char* Pawn::get_image_name() {
+std::string Pawn::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_pawn.png)";
+        return images_directory_ + R"(dark_pawn.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_pawn.png)";
+        return images_directory_ + R"(white_pawn.png)";
     }
 }
 
-const char* King::get_image_name() {
+std::string King::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_king.png)";
+        return images_directory_ + R"(dark_king.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_king.png)";
+        return images_directory_ + R"(white_king.png)";
     }
 }
 
-const char* Queen::get_image_name() {
+std::string Queen::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_Queen.png)";
+        return images_directory_ + R"(dark_Queen.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_Queen.png)";
+        return images_directory_ + R"(white_Queen.png)";
     }
 }
 
-const char* Knight::get_image_name() {
+std::string Knight::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_horse.png)";
+        return images_directory_ + R"(dark_horse.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_horse.png)";
+        return images_directory_ + R"(white_horse.png)";
     }
 }
 
-const char* Rook::get_image_name() {
+std::string Rook::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_rook.png)";
+        return images_directory_ + R"(dark_rook.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_rook.png)";
+        return images_directory_ + R"(white_rook.png)";
     }
 }
 
-const char* Bishop::get_image_name() {
+std::string Bishop::get_image_name() const {
     if(team_ == BLACK){
-        return R"(C:\\Users\\bialo\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\dark_bishop.png)";
+        return images_directory_ + R"(dark_bishop.png)";
     }
     else{
-        return R"(C:\\Users\\bialo\OneDrive\\Pulpit\\Studia\\Projects\\git\\Chess\\Chess\\images\\white_bishop.png)";
+        return images_directory_ + R"(white_bishop.png)";
     }
 }

@@ -19,7 +19,7 @@ public:
 
     ~Graphics();
 
-    void Render_piece(const char* image_dir, int X, int Y) const;
+    void Render_piece(const std::string& image_dir, int X, int Y) const;
 
     void Render_all_pieces(Piece* board[8][8]) const;
 

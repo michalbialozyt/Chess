@@ -6,13 +6,13 @@
 void Game::run() {
     auto graphics = std::make_unique<Graphics>();
     auto gamestate = std::make_unique<Game_State>();
-    auto Highlighted_position = std::make_unique<Position>();
+    auto turn = Piece::WHITE;
 
     Position null_position;
     Position Mouse_position;
+    Position* Highlighted_position = &null_position;
     Piece* Highlighted_piece;
     Game_State::Game_Result result;
-    Piece::Team turn = Piece::WHITE;
     bool quit = false;
 
     while (!quit) {
@@ -64,7 +64,7 @@ void Game::run() {
                                         std::cout << " DRAW BY 50 MOVES" << std::endl;
                                         break;
                                 }
-                            *Highlighted_position = null_position;
+                                *Highlighted_position = null_position;
                             }
                             else if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate] != nullptr){
                                 if(gamestate->board_[Mouse_position.X_Coordinate][Mouse_position.Y_Coordinate]->get_team() == turn){
@@ -90,7 +90,6 @@ void Game::run() {
                     break;
             }
         }
-
         SDL_RenderClear(graphics->renderer_);
         graphics->Render_chessboard();
         graphics->Render_possible_moves(
