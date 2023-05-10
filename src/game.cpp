@@ -63,6 +63,10 @@ void Game::run() {
                                         quit = true;
                                         std::cout << " DRAW BY 50 MOVES" << std::endl;
                                         break;
+                                    case Game_State::Game_Result::DRAW_BY_INSUFFICIENT_MATERIAL:
+                                        quit = true;
+                                        std::cout << "DRAW BY INSUFFICIENT MATERIAL" << std::endl;
+                                        break;
                                 }
                                 *Highlighted_position = null_position;
                             }

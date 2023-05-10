@@ -3,17 +3,17 @@
 //
 
 #pragma once
-#include <vector>
 #include "pieces.hpp"
 #include <memory>
 #include <map>
-#include <unordered_set>
+
 
 class Game_State{
 public:
     enum Game_Result {
-        NO_RESULT, WHITE_WIN, BLACK_WIN, DRAW_BY_STALEMATE, DRAW_BY_50_MOVES
+        NO_RESULT, WHITE_WIN, BLACK_WIN, DRAW_BY_STALEMATE, DRAW_BY_50_MOVES, DRAW_BY_INSUFFICIENT_MATERIAL
     };
+
     Game_State();
     Piece* board_[8][8]{};
     std::map<Piece*,std::vector<std::pair<Position, Piece::Move_type>>> possible_moves_;
@@ -36,11 +36,12 @@ public:
     ~Game_State() = default;
 
 private:
+    std::map<Piece::Piece_type,int> num_of_white_pieces;
+    std::map<Piece::Piece_type,int> num_of_black_pieces;
     std::size_t num_of_pieces_on_the_board_;
     int number_of_turns_without_progress_;
     Piece* white_king_;
     Piece* black_king_;
     //Piece::Team top_board_team_;
     std::vector<std::unique_ptr<Piece>> pieces_;
-
 };

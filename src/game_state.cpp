@@ -49,6 +49,12 @@ Game_State::Game_State(){
 
     for(const auto& elem : pieces_){
         board_[elem->get_position().X_Coordinate][elem->get_position().Y_Coordinate] = elem.get();
+        if(elem->get_team() == Piece::WHITE){
+            ++num_of_white_pieces[elem->get_piecetype()];
+        }
+        else{
+            ++num_of_black_pieces[elem->get_piecetype()];
+        }
     }
 
     white_king_ = board_[4][7];
@@ -120,10 +126,22 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
         }
         piece->has_moved_ = true;
 
-        //remove all pieces that are no longer on the board from the pieces_ vector
+//        auto taken_piece = std::find_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
+//            return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;});
+
+//        if(taken_piece->get() != nullptr){
+//            if(taken_piece->get()->get_team() == Piece::WHITE){
+//                --num_of_white_pieces[taken_piece->get()->get_piecetype()];
+//            }
+//            else {
+//                --num_of_black_pieces[taken_piece->get()->get_piecetype()];
+//            }
+//        }
+//        remove all pieces that are no longer on the board from the pieces_ vector
         pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
             return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
         }), pieces_.end());
+//        pieces_.erase(taken_piece);
         if(num_of_pieces_on_the_board_ != pieces_.size() || piece->get_piecetype() == Piece::PAWN){
             number_of_turns_without_progress_ = 0;
         }
@@ -187,13 +205,11 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
     std::vector<Position> pos;
     for(int i = 0; i < 8; ++i){
         for(int j = 0; j < 8; ++j){
-            if(board_[i][j] != nullptr){
-                if(board_[i][j] -> get_team() == team){
-                    auto moves = board_[i][j] ->calculate_possible_moves(board_);
-                    if(!moves.empty()) {
-                        for(const auto& move : moves){
-                            pos.push_back(move.first);
-                        }
+            if(board_[i][j] != nullptr && board_[i][j] -> get_team() == team){
+                auto moves = board_[i][j] ->calculate_possible_moves(board_);
+                if(!moves.empty()) {
+                    for(const auto& move : moves){
+                        pos.push_back(move.first);
                     }
                 }
             }
@@ -266,6 +282,23 @@ Game_State::Game_Result Game_State::check_game_result(){
     }
     if(number_of_turns_without_progress_ == 50){
         return Game_State::DRAW_BY_50_MOVES;
+    }
+    bool is_unsufficient_material_white = false;
+    bool is_unsufficient_material_black = false;
+
+    if(num_of_white_pieces[Piece::PAWN] == 0 && num_of_white_pieces[Piece::QUEEN] == 0 && num_of_white_pieces[Piece::ROOK] == 0){
+        if(num_of_white_pieces[Piece::KNIGHT] <= 2 && num_of_white_pieces[Piece::BISHOP] <= 1 && !(num_of_white_pieces[Piece::KNIGHT] == 1  && num_of_white_pieces[Piece::BISHOP] == 1)){
+            is_unsufficient_material_white = true;
+        }
+    }
+    if(num_of_black_pieces[Piece::PAWN] == 0 && num_of_black_pieces[Piece::QUEEN] == 0 && num_of_black_pieces[Piece::ROOK] == 0){
+        if(num_of_black_pieces[Piece::KNIGHT] <= 2 && num_of_black_pieces[Piece::BISHOP] <= 1 && !(num_of_black_pieces[Piece::KNIGHT] == 1  && num_of_black_pieces[Piece::BISHOP] == 1)){
+            is_unsufficient_material_black = true;
+        }
+    }
+
+    if(is_unsufficient_material_white && is_unsufficient_material_black){
+        return Game_State::DRAW_BY_INSUFFICIENT_MATERIAL;
     }
     return Game_State::NO_RESULT;
 }
