@@ -49,10 +49,18 @@ Game_State::Game_State(){
 
     for(const auto& elem : pieces_){
         board_[elem->get_position().X_Coordinate][elem->get_position().Y_Coordinate] = elem.get();
+        if(elem->get_team() == Piece::WHITE){
+            ++num_of_white_pieces[elem->get_piecetype()];
+        }
+        else{
+            ++num_of_black_pieces[elem->get_piecetype()];
+        }
     }
 
     white_king_ = board_[4][7];
     black_king_ = board_[4][0];
+    num_of_pieces_on_the_board_ = 32;
+    number_of_turns_without_progress_ = 0;
     calculate_all_possible_moves_with_check(Piece::WHITE);
 }
 
@@ -72,7 +80,7 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
                     board_[3][piece->get_position().Y_Coordinate]->has_moved_ = true;
                 }
             }
-            //castling kingside, rook move
+                //castling kingside, rook move
             else{
                 board_[5][piece->get_position().Y_Coordinate] = board_[7][piece->get_position().Y_Coordinate];
                 board_[7][piece->get_position().Y_Coordinate] = nullptr;
@@ -95,7 +103,7 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             }
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
             break;
-        // auto promoting to queen
+            // auto promoting to queen
         case Piece::PROMOTION:
             auto it = std::find_if(pieces_.begin(), pieces_.end(),[piece](const std::unique_ptr<Piece>& p) {return *piece == *p;});
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
@@ -111,16 +119,35 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             elem->set_en_passant(false);
         }
         piece->set_position(new_position);
+
+        //allowing pawn to get captured by en_passant
         if(piece->get_piecetype() == Piece::PAWN && ((piece-> get_team() == Piece::BLACK && piece->get_position().Y_Coordinate == 3) || (piece-> get_team() == Piece::WHITE && piece->get_position().Y_Coordinate == 4)) && !piece->has_moved_){
             piece->set_en_passant(true);
         }
         piece->has_moved_ = true;
 
-        //remove all pieces that are no longer on the board from the pieces_ vector
+//        auto taken_piece = std::find_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
+//            return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;});
+
+//        if(taken_piece->get() != nullptr){
+//            if(taken_piece->get()->get_team() == Piece::WHITE){
+//                --num_of_white_pieces[taken_piece->get()->get_piecetype()];
+//            }
+//            else {
+//                --num_of_black_pieces[taken_piece->get()->get_piecetype()];
+//            }
+//        }
+//        pieces_.erase(taken_piece);
+//        remove all pieces that are no longer on the board from the pieces_ vector
         pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
             return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
         }), pieces_.end());
 
+        if(num_of_pieces_on_the_board_ != pieces_.size() || piece->get_piecetype() == Piece::PAWN){
+            number_of_turns_without_progress_ = 0;
+        }
+        num_of_pieces_on_the_board_ = pieces_.size();
+        ++number_of_turns_without_progress_;
     }
 }
 
@@ -170,8 +197,8 @@ void Game_State::undo_move(Piece *piece, Piece* taken_piece, Position original_p
 }
 
 bool Game_State::is_legal_move(Position position, Piece* piece) {
-    auto it = std::find_if( possible_moves_[piece].begin(),  possible_moves_[piece].end(),
-                           [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
+    auto it = std::find_if( possible_moves_[piece].cbegin(),  possible_moves_[piece].cend(),
+                            [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
     return it !=  possible_moves_[piece].end();
 }
 
@@ -179,13 +206,11 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
     std::vector<Position> pos;
     for(int i = 0; i < 8; ++i){
         for(int j = 0; j < 8; ++j){
-            if(board_[i][j] != nullptr){
-                if(board_[i][j] -> get_team() == team){
-                    auto moves = board_[i][j] ->calculate_possible_moves(board_);
-                    if(!moves.empty()) {
-                        for(const auto& move : moves){
-                            pos.push_back(move.first);
-                        }
+            if(board_[i][j] != nullptr && board_[i][j] -> get_team() == team){
+                auto moves = board_[i][j] ->calculate_possible_moves(board_);
+                if(!moves.empty()) {
+                    for(const auto& move : moves){
+                        pos.push_back(move.first);
                     }
                 }
             }
@@ -195,10 +220,10 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
 }
 
 bool Game_State::check_check_after_move(Piece* piece, Position new_position, Piece::Move_type Move_type) {
-    Piece::Team attacking_team = Piece::WHITE;
-    Position kings_position = black_king_->get_position();
-    Piece* taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
-    Position original_position = piece->get_position();
+    auto attacking_team = Piece::WHITE;
+    auto kings_position = black_king_->get_position();
+    auto taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
+    auto original_position = piece->get_position();
 
     if(Move_type == Piece::EN_PASSANT){
         if(new_position.Y_Coordinate == 2){
@@ -221,24 +246,60 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     }
 
     auto positions_attacked = get_postitions_attacked_by_team(attacking_team);
-    auto it = std::find(positions_attacked.begin(), positions_attacked.end(), kings_position);
+    auto it = std::find(positions_attacked.cbegin(), positions_attacked.cend(), kings_position);
     undo_move(piece, taken_piece, original_position, new_position, Move_type);
     return it != positions_attacked.end();
 }
 
-bool Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
-    bool no_checkmate = false;
+void Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
     possible_moves_.clear();
     for(const auto& piece : pieces_){
         if (piece->get_team() == team_on_move){
             auto legal_moves = piece->calculate_possible_moves(board_);
             for(const auto& move : legal_moves){
                 if(!check_check_after_move(piece.get(),move.first, move.second)){
-                    no_checkmate = true;
                     possible_moves_[piece.get()].push_back(move);
                 }
             }
         }
     }
-    return no_checkmate;
+}
+
+Game_State::Game_Result Game_State::check_game_result(){
+    if(possible_moves_.empty()){
+        auto attacked_by_white = get_postitions_attacked_by_team(Piece::WHITE);
+        auto attacked_by_black = get_postitions_attacked_by_team(Piece::BLACK);
+        auto it = std::find(attacked_by_white.cbegin(), attacked_by_white.cend(), black_king_->get_position());
+        if(it != attacked_by_white.cend()){
+            return Game_State::WHITE_WIN;
+        }
+        auto it2 = std::find(attacked_by_black.cbegin(), attacked_by_black.cend(), white_king_->get_position());
+        if(it2 != attacked_by_black.cend()){
+            return Game_State::BLACK_WIN;
+        }
+        else{
+            return Game_State::DRAW_BY_STALEMATE;
+        }
+    }
+    if(number_of_turns_without_progress_ == 50){
+        return Game_State::DRAW_BY_50_MOVES;
+    }
+    bool is_unsufficient_material_white = false;
+    bool is_unsufficient_material_black = false;
+
+    if(num_of_white_pieces[Piece::PAWN] == 0 && num_of_white_pieces[Piece::QUEEN] == 0 && num_of_white_pieces[Piece::ROOK] == 0){
+        if(num_of_white_pieces[Piece::KNIGHT] <= 2 && num_of_white_pieces[Piece::BISHOP] <= 1 && !(num_of_white_pieces[Piece::KNIGHT] == 1  && num_of_white_pieces[Piece::BISHOP] == 1)){
+            is_unsufficient_material_white = true;
+        }
+    }
+    if(num_of_black_pieces[Piece::PAWN] == 0 && num_of_black_pieces[Piece::QUEEN] == 0 && num_of_black_pieces[Piece::ROOK] == 0){
+        if(num_of_black_pieces[Piece::KNIGHT] <= 2 && num_of_black_pieces[Piece::BISHOP] <= 1 && !(num_of_black_pieces[Piece::KNIGHT] == 1  && num_of_black_pieces[Piece::BISHOP] == 1)){
+            is_unsufficient_material_black = true;
+        }
+    }
+
+    if(is_unsufficient_material_white && is_unsufficient_material_black){
+        return Game_State::DRAW_BY_INSUFFICIENT_MATERIAL;
+    }
+    return Game_State::NO_RESULT;
 }
