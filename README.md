@@ -1,4 +1,6 @@
 Project in progress. Implementation of the game of chess in C++ using the SDL library.
+Project already inlcudes all game fetures such as checks, en passant moves, castling and game ending conditions.
+
 
 Current view of the game:
 
@@ -15,3 +17,4 @@ End:
 Future developments will include:
 - my own chess engine
 - singleplayer and multiplayer mode (vs the aforementioned chess AI)
+- 
