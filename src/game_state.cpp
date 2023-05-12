@@ -137,12 +137,19 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
 //                --num_of_black_pieces[taken_piece->get()->get_piecetype()];
 //            }
 //        }
+<<<<<<< HEAD
 //        pieces_.erase(taken_piece);
+=======
+>>>>>>> f08399062f3c19bdc07e6324b3f21663a74b266c
 //        remove all pieces that are no longer on the board from the pieces_ vector
         pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
             return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
         }), pieces_.end());
+<<<<<<< HEAD
 
+=======
+//        pieces_.erase(taken_piece);
+>>>>>>> f08399062f3c19bdc07e6324b3f21663a74b266c
         if(num_of_pieces_on_the_board_ != pieces_.size() || piece->get_piecetype() == Piece::PAWN){
             number_of_turns_without_progress_ = 0;
         }
@@ -198,7 +205,11 @@ void Game_State::undo_move(Piece *piece, Piece* taken_piece, Position original_p
 
 bool Game_State::is_legal_move(Position position, Piece* piece) {
     auto it = std::find_if( possible_moves_[piece].cbegin(),  possible_moves_[piece].cend(),
+<<<<<<< HEAD
                             [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
+=======
+                           [position](const std::pair<Position, Piece::Move_type>& p) { return p.first == position; });
+>>>>>>> f08399062f3c19bdc07e6324b3f21663a74b266c
     return it !=  possible_moves_[piece].end();
 }
 
