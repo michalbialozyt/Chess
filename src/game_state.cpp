@@ -5,7 +5,6 @@
 #include <algorithm>
 
 Game_State::Game_State(){
-    //top_board_team_ = Piece::BLACK;
     pieces_.push_back(std::make_unique<Knight>(Position(6,7), Piece::WHITE));
     pieces_.push_back(std::make_unique<Knight>(Position(1,7), Piece::WHITE));
     pieces_.push_back(std::make_unique<Bishop>(Position(5,7), Piece::WHITE));
@@ -103,6 +102,7 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
             }
             board_[piece->get_position().X_Coordinate][piece->get_position().Y_Coordinate] = nullptr;
             break;
+
             // auto promoting to queen
         case Piece::PROMOTION:
             auto it = std::find_if(pieces_.begin(), pieces_.end(),[piece](const std::unique_ptr<Piece>& p) {return *piece == *p;});
@@ -126,28 +126,27 @@ void Game_State::make_move(Piece* piece, const Position& new_position, const Pie
         }
         piece->has_moved_ = true;
 
-//        auto taken_piece = std::find_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
-//            return *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;});
+        auto taken_piece = std::find_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
+            return board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] == nullptr || *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;});
 
-//        if(taken_piece->get() != nullptr){
-//            if(taken_piece->get()->get_team() == Piece::WHITE){
-//                --num_of_white_pieces[taken_piece->get()->get_piecetype()];
-//            }
-//            else {
-//                --num_of_black_pieces[taken_piece->get()->get_piecetype()];
-//            }
-//        }
-//        pieces_.erase(taken_piece);
+        if(taken_piece != pieces_.end()){
+            if(taken_piece->get()->get_team() == Piece::WHITE){
+                --num_of_white_pieces[taken_piece->get()->get_piecetype()];
+            }
+            else {
+                --num_of_black_pieces[taken_piece->get()->get_piecetype()];
+            }
+        }
 //        remove all pieces that are no longer on the board from the pieces_ vector
         pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(), [this](const auto& ptr) {
             return board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] == nullptr || *board_[ptr->get_position().X_Coordinate][ptr->get_position().Y_Coordinate] != *ptr;
         }), pieces_.end());
-//        pieces_.erase(taken_piece);
+
+        ++number_of_turns_without_progress_;
         if(num_of_pieces_on_the_board_ != pieces_.size() || piece->get_piecetype() == Piece::PAWN){
             number_of_turns_without_progress_ = 0;
         }
         num_of_pieces_on_the_board_ = pieces_.size();
-        ++number_of_turns_without_progress_;
     }
 }
 
@@ -221,6 +220,7 @@ std::vector<Position> Game_State::get_postitions_attacked_by_team (Piece::Team t
 
 bool Game_State::check_check_after_move(Piece* piece, Position new_position, Piece::Move_type Move_type) {
     auto attacking_team = Piece::WHITE;
+    auto attacked_king = black_king_;
     auto kings_position = black_king_->get_position();
     auto taken_piece = board_[new_position.X_Coordinate][new_position.Y_Coordinate];
     auto original_position = piece->get_position();
@@ -239,6 +239,7 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     if(piece->get_team() == Piece::WHITE){
         attacking_team = Piece::BLACK;
         kings_position = white_king_->get_position();
+        attacked_king = white_king_;
     }
 
     if(piece->get_piecetype() == Piece::KING && piece->get_team() != attacking_team){
@@ -246,9 +247,19 @@ bool Game_State::check_check_after_move(Piece* piece, Position new_position, Pie
     }
 
     auto positions_attacked = get_postitions_attacked_by_team(attacking_team);
-    auto it = std::find(positions_attacked.cbegin(), positions_attacked.cend(), kings_position);
-    undo_move(piece, taken_piece, original_position, new_position, Move_type);
-    return it != positions_attacked.end();
+
+    if(Move_type == Piece::CASTLE){
+        auto it = std::find(positions_attacked.cbegin(), positions_attacked.cend(), new_position);
+        auto it2 = std::find(positions_attacked.cbegin(), positions_attacked.cend(), attacked_king->get_position());
+        auto it3 = std::find(positions_attacked.cbegin(), positions_attacked.cend(), Position(static_cast<int>((new_position.X_Coordinate + attacked_king->get_position().X_Coordinate)/2), new_position.Y_Coordinate));
+        undo_move(piece, taken_piece, original_position, new_position, Move_type);
+        return it != positions_attacked.cend() || it2 != positions_attacked.cend() || it3 != positions_attacked.cend();
+    }
+    else{
+        auto it = std::find(positions_attacked.cbegin(), positions_attacked.cend(), kings_position);
+        undo_move(piece, taken_piece, original_position, new_position, Move_type);
+        return it != positions_attacked.end();
+    }
 }
 
 void Game_State::calculate_all_possible_moves_with_check(Piece::Team team_on_move){
@@ -281,9 +292,11 @@ Game_State::Game_Result Game_State::check_game_result(){
             return Game_State::DRAW_BY_STALEMATE;
         }
     }
-    if(number_of_turns_without_progress_ == 50){
+
+    if(number_of_turns_without_progress_ == 100){
         return Game_State::DRAW_BY_50_MOVES;
     }
+
     bool is_unsufficient_material_white = false;
     bool is_unsufficient_material_black = false;
 
@@ -297,7 +310,6 @@ Game_State::Game_Result Game_State::check_game_result(){
             is_unsufficient_material_black = true;
         }
     }
-
     if(is_unsufficient_material_white && is_unsufficient_material_black){
         return Game_State::DRAW_BY_INSUFFICIENT_MATERIAL;
     }
