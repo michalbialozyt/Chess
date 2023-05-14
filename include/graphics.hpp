@@ -1,13 +1,13 @@
 //
 // Created by michalbialozyt on 25.04.2023.
 //
+
 #pragma once
-#include "position.hpp"
 #include "game_state.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
-#include <string>
+#include <cmath>
 
 class Graphics {
 public:
@@ -16,7 +16,6 @@ public:
     const char* TITLE = "CHESS GAME";
 
     Graphics();
-
     ~Graphics();
 
     void Render_piece(const std::string& image_dir, int X, int Y) const;

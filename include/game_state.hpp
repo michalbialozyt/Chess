@@ -4,6 +4,7 @@
 
 #pragma once
 #include "pieces.hpp"
+#include <algorithm>
 #include <memory>
 #include <map>
 

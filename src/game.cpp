@@ -1,8 +1,9 @@
 //
 // Created by michalbialozyt on 25.04.2023.
 //
-#include <algorithm>
+
 #include "game.hpp"
+
 void Game::run() {
     auto graphics = std::make_unique<Graphics>();
     auto gamestate = std::make_unique<Game_State>();
@@ -29,6 +30,7 @@ void Game::run() {
                     if(SDL_BUTTON_LEFT == event.button.button){
                         if(Highlighted_position -> X_Coordinate != -1){
                             Highlighted_piece = gamestate->board_[Highlighted_position->X_Coordinate][Highlighted_position->Y_Coordinate];
+
                             if(gamestate->is_legal_move(Mouse_position,Highlighted_piece)) {
                                 auto move = std::find_if(gamestate->possible_moves_[Highlighted_piece].begin(),
                                                          gamestate->possible_moves_[Highlighted_piece].end(),
@@ -36,14 +38,17 @@ void Game::run() {
                                 gamestate->make_move(
                                         gamestate->board_[Highlighted_position->X_Coordinate][Highlighted_position->Y_Coordinate],
                                         move->first, move->second, false);
+
                                 if(turn == Piece::WHITE){
                                     turn = Piece::BLACK;
                                 }
                                 else{
                                     turn = Piece::WHITE;
                                 }
+
                                 gamestate->calculate_all_possible_moves_with_check(turn);
                                 result = gamestate->check_game_result();
+
                                 switch(result){
                                     case Game_State::NO_RESULT:
                                         break;

@@ -1,6 +1,7 @@
 //
 // Created by michal bialozyt on 19.04.2023.
 //
+
 #include "pieces.hpp"
 
 //checking possible moves for the king/ not including taking or check
@@ -17,16 +18,19 @@ std::vector<std::pair<Position,Piece::Move_type>> King::calculate_possible_moves
             }
         }
     }
+
     if(board[position_.X_Coordinate + 3][position_.Y_Coordinate] != nullptr) {
         if (!has_moved_ && !board[position_.X_Coordinate + 3][position_.Y_Coordinate]->has_moved_ && board[position_.X_Coordinate + 1][position_.Y_Coordinate] == nullptr && board[position_.X_Coordinate + 2][position_.Y_Coordinate] == nullptr){
             legal_moves.emplace_back(Position(position_.X_Coordinate + 2, position_.Y_Coordinate),Piece::CASTLE);
         }
     }
+
     if(board[position_.X_Coordinate - 4][position_.Y_Coordinate] != nullptr) {
         if (!has_moved_ && !board[position_.X_Coordinate - 4][position_.Y_Coordinate]->has_moved_ && board[position_.X_Coordinate - 3][position_.Y_Coordinate] == nullptr && board[position_.X_Coordinate - 2][position_.Y_Coordinate] == nullptr && board[position_.X_Coordinate - 1][position_.Y_Coordinate] == nullptr){
             legal_moves.emplace_back(Position(position_.X_Coordinate - 2, position_.Y_Coordinate),Piece::CASTLE);
         }
     }
+
     return legal_moves;
 }
 
@@ -51,6 +55,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         pos.Y_Coordinate = position_.Y_Coordinate + 1;
         pos.X_Coordinate = position_.X_Coordinate + 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
@@ -63,6 +68,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         pos.X_Coordinate = position_.X_Coordinate - 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
@@ -74,18 +80,21 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         if(position_.Y_Coordinate == 4) {
-            if (board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
+            if (position_.X_Coordinate < 7 && board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
                 if (board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate + 1][position_.Y_Coordinate]->check_en_passant()){
                     legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate + 1),Piece::EN_PASSANT);
                 }
-            } else if (board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
+            }
+            else if(position_.X_Coordinate > 0  && board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
                 if (board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate - 1][position_.Y_Coordinate]->check_en_passant()){
                     legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate + 1),Piece::EN_PASSANT);
                 }
             }
         }
     }
+
     else {
         pos = Position(position_.X_Coordinate, position_.Y_Coordinate - 1);
         if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr) {
@@ -102,6 +111,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         pos.Y_Coordinate = position_.Y_Coordinate - 1;
         pos.X_Coordinate = position_.X_Coordinate + 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
@@ -114,6 +124,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         pos.X_Coordinate = position_.X_Coordinate - 1;
         if(pos.X_Coordinate >= 0 && pos.X_Coordinate < 8 && pos.Y_Coordinate >= 0 && pos.Y_Coordinate < 8 && board[pos.X_Coordinate][pos.Y_Coordinate] != nullptr) {
             if (board[pos.X_Coordinate][pos.Y_Coordinate]->get_team() != team_) {
@@ -125,18 +136,21 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
                 }
             }
         }
+
         if(position_.Y_Coordinate == 3) {
-            if (board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
+            if (position_.X_Coordinate < 7 && board[position_.X_Coordinate + 1][position_.Y_Coordinate] != nullptr) {
                 if (board[position_.X_Coordinate + 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate + 1][position_.Y_Coordinate]->check_en_passant()){
                     legal_moves.emplace_back(Position(position_.X_Coordinate + 1, position_.Y_Coordinate - 1),Piece::EN_PASSANT);
                 }
-            } else if (board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
+            }
+            else if(position_.X_Coordinate > 0 && board[position_.X_Coordinate - 1][position_.Y_Coordinate] != nullptr) {
                 if (board[position_.X_Coordinate - 1][position_.Y_Coordinate]->get_piecetype() == Piece::PAWN && board[position_.X_Coordinate - 1][position_.Y_Coordinate]->check_en_passant()){
                     legal_moves.emplace_back(Position(position_.X_Coordinate - 1, position_.Y_Coordinate - 1),Piece::EN_PASSANT);
                 }
             }
         }
     }
+
     return legal_moves;
 }
 
@@ -144,7 +158,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Pawn::calculate_possible_moves
 std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
 
-    for(const auto& move : Knight_moves::horsey_moves_){
+    for(const auto& move : Knight_moves::horse_moves_){
         Position pos = Position(position_.X_Coordinate + move.first, position_.Y_Coordinate + move.second);
         if(pos.X_Coordinate < 8 && pos.X_Coordinate >= 0 && pos.Y_Coordinate < 8 && pos.Y_Coordinate >= 0){
             if(board[pos.X_Coordinate][pos.Y_Coordinate] == nullptr || board[pos.X_Coordinate][pos.Y_Coordinate] -> get_team() != team_){
@@ -152,6 +166,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Knight::calculate_possible_mov
             }
         }
     }
+
     return legal_moves;
 }
 
@@ -173,6 +188,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
             break;
         }
     }
+
     i = position.X_Coordinate - 1;
 
     while(i >= 0){
@@ -189,6 +205,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
             break;
         }
     }
+
     i = position.X_Coordinate;
     j = position.Y_Coordinate + 1;
 
@@ -206,6 +223,7 @@ void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Mov
             break;
         }
     }
+
     j = position.Y_Coordinate - 1;
 
     while(j >= 0){
@@ -243,6 +261,7 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
             break;
         }
     }
+
     i = position.X_Coordinate - 1;
     j = position.Y_Coordinate + 1;
 
@@ -261,6 +280,7 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
             break;
         }
     }
+
     i = position.X_Coordinate + 1;
     j = position.Y_Coordinate - 1;
 
@@ -279,6 +299,7 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
             break;
         }
     }
+
     i = position.X_Coordinate - 1;
     j = position.Y_Coordinate - 1;
 
@@ -301,14 +322,14 @@ void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, 
 
 
 //legal moves for the rook not considering checks
-std::vector<std::pair<Position,Piece::Move_type>> Rook::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Rook::calculate_possible_moves(const Piece* const (&board)[8][8]) const{
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_vertical_and_horizontal_moves(legal_moves, position_, board);
     return legal_moves;
 }
 
 //legal moves for the bishop not considering checks
-std::vector<std::pair<Position,Piece::Move_type>> Bishop::calculate_possible_moves(const Piece* const (&board)[8][8]) const {
+std::vector<std::pair<Position,Piece::Move_type>> Bishop::calculate_possible_moves(const Piece* const (&board)[8][8]) const{
     std::vector<std::pair<Position,Piece::Move_type>> legal_moves;
     add_diagonal_moves(legal_moves, position_,board);
     return legal_moves;
@@ -322,7 +343,7 @@ std::vector<std::pair<Position,Piece::Move_type>> Queen::calculate_possible_move
     return legal_moves;
 }
 
-std::string Pawn::get_image_name() const {
+std::string Pawn::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_pawn.png)";
     }
@@ -331,7 +352,7 @@ std::string Pawn::get_image_name() const {
     }
 }
 
-std::string King::get_image_name() const {
+std::string King::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_king.png)";
     }
@@ -340,7 +361,7 @@ std::string King::get_image_name() const {
     }
 }
 
-std::string Queen::get_image_name() const {
+std::string Queen::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_Queen.png)";
     }
@@ -349,7 +370,7 @@ std::string Queen::get_image_name() const {
     }
 }
 
-std::string Knight::get_image_name() const {
+std::string Knight::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_horse.png)";
     }
@@ -358,7 +379,7 @@ std::string Knight::get_image_name() const {
     }
 }
 
-std::string Rook::get_image_name() const {
+std::string Rook::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_rook.png)";
     }
@@ -367,7 +388,7 @@ std::string Rook::get_image_name() const {
     }
 }
 
-std::string Bishop::get_image_name() const {
+std::string Bishop::get_image_name() const{
     if(team_ == BLACK){
         return images_directory_ + R"(dark_bishop.png)";
     }

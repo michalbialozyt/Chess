@@ -1,8 +1,8 @@
 //
 // Created by michal bialozyt on 20.04.2023.
 //
+
 #include "game_state.hpp"
-#include <algorithm>
 
 Game_State::Game_State(){
     pieces_.push_back(std::make_unique<Knight>(Position(6,7), Piece::WHITE));

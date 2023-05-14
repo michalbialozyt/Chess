@@ -37,10 +37,10 @@ public:
     [[nodiscard]] virtual bool check_en_passant() const {return false;}
 
     bool operator==(const Piece& other) const  {
-        return this->position_ == other.get_position() && this->team_ == other.get_team() && this->piecetype_ == other.get_piecetype() ;
+        return this->position_ == other.get_position() && this->team_ == other.get_team() && this->piecetype_ == other.get_piecetype();
     }
     bool operator!=(const Piece& other) const  {
-        return this->position_ != other.get_position() || this->team_ != other.get_team() || this->piecetype_ != other.get_piecetype() ;
+        return this->position_ != other.get_position() || this->team_ != other.get_team() || this->piecetype_ != other.get_piecetype();
     }
 
     bool has_moved_ = false;
@@ -57,10 +57,11 @@ class Pawn: public Piece {
 public:
     Pawn(const Pawn& other) = default;
     Pawn(const Position& start_position, Team team) : Piece(start_position, team, PAWN), en_passant_enabled(false){}
-    [[nodiscard]] std::string get_image_name() const override;
+
     void set_en_passant(bool setting) override {en_passant_enabled = setting;}
     [[nodiscard]] bool check_en_passant() const override {return en_passant_enabled;}
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
+    [[nodiscard]] std::string get_image_name() const override;
 
 private:
     bool en_passant_enabled;
@@ -68,49 +69,52 @@ private:
 
 class King: public Piece {
 public:
-
     King(const Position& start_position, const Team& team) : Piece(start_position, team,KING){}
+    ~King() override = default;
+
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     [[nodiscard]] std::string get_image_name() const override;
-    ~King() override = default;
 };
 
 class Queen: public Piece {
 public:
     Queen(const Position& start_position, const Team& team) : Piece(start_position, team, QUEEN){}
+    ~Queen() override = default;
+
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     [[nodiscard]] std::string get_image_name() const override;
-    ~Queen() override = default;
 };
 
 class Knight: public Piece {
 public:
     Knight(const Position& start_position, const Team& team) : Piece(start_position, team, KNIGHT){}
+    ~Knight() override = default;
+
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     [[nodiscard]] std::string get_image_name() const override;
-    ~Knight() override = default;
 };
 
 class Bishop: public Piece {
 public:
     Bishop(const Position& start_position, const Team& team) : Piece(start_position, team, BISHOP){}
+    ~Bishop() override = default;
+
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     [[nodiscard]] std::string get_image_name() const override;
-    ~Bishop() override = default;
 };
 
 class Rook: public Piece {
 public:
-    Rook(const Rook& other) = default;
     Rook(const Position& start_position, const Team& team) : Piece(start_position, team, ROOK){}
+    ~Rook() override = default;
+
     [[nodiscard]] std::vector<std::pair<Position,Piece::Move_type>> calculate_possible_moves(const Piece* const (&board)[8][8]) const override;
     [[nodiscard]] std::string get_image_name() const override;
-    ~Rook() override = default;
 };
 
 void add_vertical_and_horizontal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, const Piece* const (&board)[8][8]);
 void add_diagonal_moves(std::vector<std::pair<Position,Piece::Move_type>>& vec, Position position, const Piece* const (&board)[8][8]);
 
 struct Knight_moves{
-    inline static std::set<std::pair<int,int>> horsey_moves_{std::make_pair(1,2), std::make_pair(1,-2),std::make_pair(-1,2),std::make_pair(-1,-2),std::make_pair(2,1),std::make_pair(-2,-1),std::make_pair(-2,1),std::make_pair(2,-1)};
+    inline static std::set<std::pair<int,int>> horse_moves_{std::make_pair(1,2), std::make_pair(1,-2),std::make_pair(-1,2),std::make_pair(-1,-2),std::make_pair(2,1),std::make_pair(-2,-1),std::make_pair(-2,1),std::make_pair(2,-1)};
 };

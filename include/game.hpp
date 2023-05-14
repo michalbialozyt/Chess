@@ -7,7 +7,5 @@
 
 class Game {
 public:
-    Game() = default;
-    ~Game() = default;
     static void run();
 };

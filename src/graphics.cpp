@@ -1,9 +1,8 @@
 //
 // Created by michal bialozyt on 25.04.2023.
 //
+
 #include "graphics.hpp"
-#include <algorithm>
-#include <cmath>
 
 Graphics::Graphics(){
     SDL_Init(SDL_INIT_VIDEO);
@@ -92,6 +91,7 @@ void Graphics::Render_possible_moves(Piece* piece, const std::unique_ptr<Game_St
 
                     double dist = sqrt((x - cellRect.w + 40) * (x - cellRect.w + 40) + (y - cellRect.h + 40) * (y - cellRect.h + 40));
                     double alpha = 0.2;
+                    //different move highlighting if the position is occupied or not
                     if((dist > 15 && !is_occupied) || (is_occupied && (dist < 33 || dist > 36))){
                         alpha = 0.0;
                     }
@@ -103,13 +103,14 @@ void Graphics::Render_possible_moves(Piece* piece, const std::unique_ptr<Game_St
             SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
             SDL_RenderCopy(renderer_, texture, nullptr, &cellRect);
         }
-        //highlight the position of the piece
+
         Position pos = piece->get_position();
         SDL_Rect cellRect;
         cellRect.w = WIDTH / 8;
         cellRect.h = HEIGHT / 8;
         cellRect.x = pos.X_Coordinate * WIDTH / 8;
         cellRect.y = pos.Y_Coordinate * HEIGHT / 8;
+
         if(std::div((cellRect.x + cellRect.y),80).quot % 2 == 0){
             SDL_SetRenderDrawColor(renderer_, 167, 136, 36, 255);
         }
