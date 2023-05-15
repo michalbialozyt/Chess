@@ -17,4 +17,3 @@ End:
 Future developments will include:
 - my own chess engine
 - singleplayer and multiplayer mode (vs the aforementioned chess AI)
-- 
